@@ -1,4 +1,4 @@
-package cn.cjp.spider.sina.weibo.domain;
+package cn.cjp.spider.domain.weibo.sina;
 
 import org.json.JSONException;
 import org.json.JSONObject;
