@@ -10,8 +10,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import cn.cjp.base.utils.CodeUtil;
 import cn.cjp.spider.domain.weibo.sina.LoginDomain;
-import cn.cjp.spider.utils.CodeUtil;
 
 public class SinaWeiboAccessTest {
 

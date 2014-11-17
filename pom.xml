@@ -34,6 +34,11 @@
 	</properties>
 
 	<dependencies>
+	    <dependency>
+	        <groupId>cn.cjp</groupId>
+	        <artifactId>cjp-base</artifactId>
+	        <version>${project.version}</version>
+	    </dependency>
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
