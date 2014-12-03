@@ -11,7 +11,7 @@ cjp-spider
   设计上：
   a. 会考虑抓取策略，以前写了一个队三大新闻网站的抓取，但代码结构不是很好，有时间重构一下，然后放上来；
   b. 会采用分布式solr进行存储（solrCloud），搭建的方式及环境，我也会提供出一个链接；
-     （一个搭建的教程，自己写的，欢迎来喷：http://wenku.baidu.com/view/8d858fb2360cba1aa911da59.html）
+     （一个搭建的教程，自己写的，欢迎来喷：<a href="http://wenku.baidu.com/view/8d858fb2360cba1aa911da59.html" target="_blank">http://wenku.baidu.com/view/8d858fb2360cba1aa911da59.html</a>）
 
 3. 暂时该项目只会完成上述两项，如果有时间的话，会做一些更有技术含量的抓取
   a. 图片、视频抓取
