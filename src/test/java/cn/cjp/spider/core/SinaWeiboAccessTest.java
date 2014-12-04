@@ -1,6 +1,7 @@
 package cn.cjp.spider.core;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +16,7 @@ import cn.cjp.spider.domain.weibo.sina.LoginDomain;
 
 public class SinaWeiboAccessTest {
 
-	Map<String, String> cookies = null;
+	Map<String, String> cookies = new HashMap<String, String>();
 	
 	@SuppressWarnings("serial")
 	@Before
@@ -28,8 +29,49 @@ public class SinaWeiboAccessTest {
 			put("entry", "mweibo");
 		}});
 		LoginDomain loginDomain = LoginDomain.fromJson(response.body());
-			Assert.assertEquals("登录", loginDomain.retcode, LoginDomain.LOGIN_SUCCESS);
+		Assert.assertEquals("登录", loginDomain.retcode, LoginDomain.LOGIN_SUCCESS);
 		cookies = response.cookies();
+		
+		System.out.println(cookies);
+	}
+	
+	@Test
+	public void testPubWeibo() throws IOException, InterruptedException{
+		Map<String, String> datas = new HashMap<String, String>();
+		long time = new Date().getTime();
+		System.out.println(time);
+		datas.put("content", time+" @Real金鹏 ");
+		
+		// 位置（这里是我设置的一个韩国的位置）
+		datas.put("poiid", "B2094457D269A6FC489F");
+		
+		String json = SinaWeiboAccess.pubWeibo(cookies, datas);
+		
+		System.out.println(CodeUtil.unicodeToString(json));
+	}
+	
+	/**
+	 * 打算用来测试发布微博并带有终端信息的功能（Android、iPhone .etc）
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	@Test
+	public void testMPubWeibo() throws IOException, InterruptedException{
+		Map<String, String> datas = new HashMap<String, String>();
+//		// 校验参数（两个参数同时校验）
+//		datas.put("c", "android");
+//		datas.put("s", "142c4198");
+		
+		long time = new Date().getTime();
+		System.out.println(time);
+		datas.put("content", time+" @Real金鹏 ");
+		
+		// 位置（这里是我设置的一个韩国的位置）
+		datas.put("poiid", "B2094457D269A6FC489F");
+		
+		String json = SinaWeiboAccess.pubMWeibo(cookies, "android", datas);
+		
+		System.out.println(CodeUtil.unicodeToString(json));
 	}
 	
 	@Test

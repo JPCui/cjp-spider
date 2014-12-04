@@ -1,10 +1,22 @@
 package cn.cjp.spider.core;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.Connection;
 import org.jsoup.Connection.Method;
 import org.jsoup.Connection.Response;
@@ -20,6 +32,8 @@ import cn.cjp.spider.domain.weibo.sina.Const;
  *           {@link SinaWeiboAccess#getPLsOfWeibo(Map, String, String, int)}<br>
  *           {@link SinaWeiboAccess#getWeibosOfUser(Map, String, int)}<br>
  *           {@link SinaWeiboAccess#getZFsOfWeibo(Map, String, String, int)}<br>
+ *           {@link SinaWeiboAccess#login(Map)}<br>
+ *           {@link SinaWeiboAccess#pubWeibo(Map, Map)}<br>
  * @author REAL
  * 
  */
@@ -171,6 +185,55 @@ public class SinaWeiboAccess {
 		Response response = request(conn);
 		return response.body();
 	}
+	
+	/**
+	 * 
+	 * @param cookies
+	 * @param datas 
+	 * <pre>
+	 * **** 发布内容 ****
+	 * content  我是一条微博
+	 * 
+	 * **** 发布图片（逗号分隔每一个picId） ****
+	 * picId  picId1,picId2
+	 * 
+	 * **** 发布位置信息 ****
+	 * poiid	B2094656D465AAFB4099 // 位置信息只需要poiid
+	 * </pre>
+	 * @return
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public static String pubWeibo(Map<String, String> cookies, Map<String, String> datas) throws IOException, InterruptedException{
+		String url = Const.B_PUB_WEIBO;
+		Connection conn = getConnection(url);
+		conn.cookies(cookies);
+		conn.data(datas);
+		conn.method(Method.POST);
+
+		Response response = request(conn);
+		return response.body();
+	}
+
+	/**
+	 * 发送移动App微博，在微博上显示自己设置的终端类型
+	 * @param cookies
+	 * @param datas
+	 * @return
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public static String pubMWeibo(Map<String, String> cookies,String term, Map<String, String> datas) throws IOException, InterruptedException{
+		String url = Const.M_PUB_WEIBO+"gsid="+cookies.get("gsid_CTandWM");
+		Connection conn = getConnection(url);
+		conn.data(datas);
+		conn.method(Method.POST);
+		
+//		Response response = request(conn);
+//		return response.body();
+
+		throw new NotImplementedException();
+	}
 
 	/**
 	 * 获取指定用户的微博列表
@@ -222,4 +285,139 @@ public class SinaWeiboAccess {
 		return response.body();
 	}
 
+	/**
+	 * 
+	 * @param f
+	 *            图片文件
+	 * @return 返回 picId
+	 * @throws Exception
+	 */
+	public static String addPic(Map<String, String> cookies, File f) {
+		try {
+			String bound = "---------------------------20226268138071";
+			List<byte[]> bts = new ArrayList<byte[]>();
+
+			String ts = "--"
+					+ bound
+					+ "\r\n"
+					+ "Content-Disposition: form-data; name=\"type\""
+					+ "\r\n\r\n"
+					+ "json"
+					+ "\r\n"
+					+ "--"
+					+ bound
+					+ "\r\n"
+					+ "Content-Disposition: form-data; name=\"pic\"; filename=\"2.png\""
+					+ "\r\n" + "Content-Type: image/png" + "\r\n\r\n";
+			bts.add(ts.getBytes());
+			ts = "";
+
+			// 写入图片流
+			int size = (int) f.length();
+			byte[] data = new byte[size];
+			try {
+				FileInputStream fis = new FileInputStream(f);
+				fis.read(data, 0, size);
+				fis.close();
+				bts.add(data);
+			} catch (Exception e) {
+				return e.getMessage();
+			}
+
+			ts += "\r\n--" + bound + "--\r\n";
+			bts.add(ts.getBytes());
+			ts = "";
+
+			String str = "";
+			try {
+				str = upload(cookies, bound, bts);
+			} catch (Exception e) {
+				return e.getMessage();
+			}
+
+			JSONObject jsonObj = null;
+			try {
+				jsonObj = new JSONObject(str);
+				ts = jsonObj.getString("pic_id");
+			} catch (JSONException e) {
+				return e.getMessage();
+			}
+			return ts;
+		} catch (Exception e) {
+			return e.getMessage();
+		}
+	}
+
+	/**
+	 * 上传方法 返回上传完毕的文件名
+	 * 
+	 * @return 如果正常，返回：{"ok":1,"msg":null,"pic_url":
+	 *         "http:\/\/ww4.sinaimg.cn\/thumbnail\/da66c124jw1el0lhc07x7j200w0owmxg.jpg","pic_id":"da66c124jw1el0lhc07x7j200w0owmxg"
+	 *         } <br>
+	 *         如果通信异常，返回：{\"ok\":0,\"msg\":"000"}
+	 */
+	private static String upload(Map<String, String> cookieMap, String boundary, List<byte[]> data) {
+		try {
+			// 服务器IP(这里是从属性文件中读取出来的)
+			URL url = new URL(Const.ADD_PIC_URL);
+
+			HttpURLConnection uc = (HttpURLConnection) url.openConnection();
+			uc.setConnectTimeout(5000);
+			uc.setReadTimeout(30000);
+			uc.setDoOutput(true);
+			uc.setDoInput(true);
+			uc.setUseCaches(false);
+			uc.setRequestMethod("POST");
+			// 上传图片的一些参数设置
+			uc.setRequestProperty("Accept",
+					"application/json, text/javascript, */*; q=0.01");
+			uc.setRequestProperty("Connection", "keep-alive");
+			uc.setRequestProperty("Content-type",
+					"multipart/form-data; boundary=" + boundary);
+			
+			String cookieStr = "";
+			for (String key : cookieMap.keySet()) {
+				cookieStr += key + "=" + cookieMap.get(key) + ";";
+			}
+			uc.setRequestProperty(
+					"Cookie",
+					cookieStr);
+			
+			uc.setRequestProperty("Referer", "http://m.weibo.cn/mblog");
+			uc.setRequestProperty("User-Agent",
+					"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:32.0) Gecko/20100101 Firefox/32.0");
+			uc.setRequestProperty("X-Requested-With", "XMLHttpRequest");
+			uc.setDoOutput(true);
+			uc.setUseCaches(true);
+
+			OutputStream out = uc.getOutputStream();
+			for (byte[] bs : data) {
+				out.write(bs);
+			}
+			out.flush();
+			out.close();
+
+			// 读取响应数据
+			int code = uc.getResponseCode();
+
+			String sCurrentLine = "";
+			// 存放响应结果
+			String sTotalString = "";
+			if (code == 200) {
+				java.io.InputStream is = uc.getInputStream();
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(is, "UTF-8"));
+				while ((sCurrentLine = reader.readLine()) != null)
+					if (sCurrentLine.length() > 0)
+						sTotalString += sCurrentLine.trim();
+			} else {
+				sTotalString = "{\"ok\":0,\"msg\":" + code + "}";
+			}
+			return sTotalString;
+		} catch (Exception e) {
+			return e.getMessage();
+		}
+
+
+	}
 }
