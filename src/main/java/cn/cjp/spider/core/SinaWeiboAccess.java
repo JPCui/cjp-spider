@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Connection;
@@ -87,7 +87,7 @@ public class SinaWeiboAccess {
 	 * 登录
 	 * 
 	 * @param data
-	 *            参数
+	 *            参数(username, password)
 	 * @return
 	 * @throws IOException
 	 * @throws InterruptedException
@@ -101,6 +101,7 @@ public class SinaWeiboAccess {
 		conn.method(Method.POST);
 
 		Response response = request(conn);
+		
 		return response;
 	}
 
