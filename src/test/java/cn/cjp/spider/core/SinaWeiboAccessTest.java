@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.jsoup.Connection.Response;
 import org.junit.Assert;
@@ -12,6 +13,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cn.cjp.base.utils.CodeUtil;
+import cn.cjp.base.utils.JacksonUtil;
+import cn.cjp.spider.domain.weibo.sina.HomeWeibo;
 import cn.cjp.spider.domain.weibo.sina.LoginDomain;
 
 public class SinaWeiboAccessTest {
@@ -32,7 +35,16 @@ public class SinaWeiboAccessTest {
 		Assert.assertEquals("登录", loginDomain.retcode, LoginDomain.LOGIN_SUCCESS);
 		cookies = response.cookies();
 		
-		System.out.println(cookies);
+		System.out.println(JacksonUtil.toJson(loginDomain));
+	}
+	
+	@Test
+	public void testGetHomeWeibo() throws IOException, InterruptedException, JSONException{
+		String weibosJson = SinaWeiboAccess.getHomeWeibo(cookies, null, 1);
+		System.out.println(new JSONArray(weibosJson));
+		
+		HomeWeibo homeWeibo = HomeWeibo.fromJson(weibosJson);
+		System.out.println(JacksonUtil.toJson(homeWeibo));
 	}
 	
 	@Test

@@ -27,7 +27,7 @@ import cn.cjp.spider.domain.weibo.sina.Const;
 /**
  * 
  * @function <br>
- * {@link SinaWeiboAccess#getAttitudesOfWeibo(Map, String, int)}<br>
+ *           {@link SinaWeiboAccess#getAttitudesOfWeibo(Map, String, int)}<br>
  *           {@link SinaWeiboAccess#getHomeWeibo(Map, String, String)}<br>
  *           {@link SinaWeiboAccess#getPLsOfWeibo(Map, String, String, int)}<br>
  *           {@link SinaWeiboAccess#getWeibosOfUser(Map, String, int)}<br>
@@ -101,7 +101,7 @@ public class SinaWeiboAccess {
 		conn.method(Method.POST);
 
 		Response response = request(conn);
-		
+
 		return response;
 	}
 
@@ -116,17 +116,15 @@ public class SinaWeiboAccess {
 	 * @throws InterruptedException
 	 */
 	public static String getHomeWeibo(Map<String, String> cookies,
-			String next_cursor, String page) throws IOException,
+			String next_cursor, int page) throws IOException,
 			InterruptedException {
 		String url = Const.HOME_WEIBO_URL;
 		if (!StringUtils.isBlank(next_cursor)) {
-			url = url.replace("{next_cursor}", next_cursor);
+			url += "&next_cursor=" + next_cursor;
 		}
-		url = url.replace("{page}", page + "");
+		url += "&page=" + page;
 		Connection conn = getConnection(url);
-		for (String key : cookies.keySet()) {
-			conn.header(key, cookies.get(key));
-		}
+		conn.cookies(cookies);
 		conn.method(Method.POST);
 
 		Response response = request(conn);
@@ -186,12 +184,12 @@ public class SinaWeiboAccess {
 		Response response = request(conn);
 		return response.body();
 	}
-	
+
 	/**
 	 * 
 	 * @param cookies
-	 * @param datas 
-	 * <pre>
+	 * @param datas
+	 *            <pre>
 	 * **** 发布内容 ****
 	 * content  我是一条微博
 	 * 
@@ -205,7 +203,8 @@ public class SinaWeiboAccess {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public static String pubWeibo(Map<String, String> cookies, Map<String, String> datas) throws IOException, InterruptedException{
+	public static String pubWeibo(Map<String, String> cookies,
+			Map<String, String> datas) throws IOException, InterruptedException {
 		String url = Const.B_PUB_WEIBO;
 		Connection conn = getConnection(url);
 		conn.cookies(cookies);
@@ -218,20 +217,22 @@ public class SinaWeiboAccess {
 
 	/**
 	 * 发送移动App微博，在微博上显示自己设置的终端类型
+	 * 
 	 * @param cookies
 	 * @param datas
 	 * @return
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public static String pubMWeibo(Map<String, String> cookies,String term, Map<String, String> datas) throws IOException, InterruptedException{
-		String url = Const.M_PUB_WEIBO+"gsid="+cookies.get("gsid_CTandWM");
+	public static String pubMWeibo(Map<String, String> cookies, String term,
+			Map<String, String> datas) throws IOException, InterruptedException {
+		String url = Const.M_PUB_WEIBO + "gsid=" + cookies.get("gsid_CTandWM");
 		Connection conn = getConnection(url);
 		conn.data(datas);
 		conn.method(Method.POST);
-		
-//		Response response = request(conn);
-//		return response.body();
+
+		// Response response = request(conn);
+		// return response.body();
 
 		throw new NotImplementedException();
 	}
@@ -353,11 +354,12 @@ public class SinaWeiboAccess {
 	 * 上传方法 返回上传完毕的文件名
 	 * 
 	 * @return 如果正常，返回：{"ok":1,"msg":null,"pic_url":
-	 *         "http:\/\/ww4.sinaimg.cn\/thumbnail\/da66c124jw1el0lhc07x7j200w0owmxg.jpg","pic_id":"da66c124jw1el0lhc07x7j200w0owmxg"
-	 *         } <br>
+	 *         "http:\/\/ww4.sinaimg.cn\/thumbnail\/da66c124jw1el0lhc07x7j200w0owmxg.jpg","pic_id":"da66c124jw1el0lhc07x7j200w0owmxg
+	 *         " } <br>
 	 *         如果通信异常，返回：{\"ok\":0,\"msg\":"000"}
 	 */
-	private static String upload(Map<String, String> cookieMap, String boundary, List<byte[]> data) {
+	private static String upload(Map<String, String> cookieMap,
+			String boundary, List<byte[]> data) {
 		try {
 			// 服务器IP(这里是从属性文件中读取出来的)
 			URL url = new URL(Const.ADD_PIC_URL);
@@ -375,15 +377,13 @@ public class SinaWeiboAccess {
 			uc.setRequestProperty("Connection", "keep-alive");
 			uc.setRequestProperty("Content-type",
 					"multipart/form-data; boundary=" + boundary);
-			
+
 			String cookieStr = "";
 			for (String key : cookieMap.keySet()) {
 				cookieStr += key + "=" + cookieMap.get(key) + ";";
 			}
-			uc.setRequestProperty(
-					"Cookie",
-					cookieStr);
-			
+			uc.setRequestProperty("Cookie", cookieStr);
+
 			uc.setRequestProperty("Referer", "http://m.weibo.cn/mblog");
 			uc.setRequestProperty("User-Agent",
 					"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:32.0) Gecko/20100101 Firefox/32.0");
@@ -418,7 +418,6 @@ public class SinaWeiboAccess {
 		} catch (Exception e) {
 			return e.getMessage();
 		}
-
 
 	}
 }

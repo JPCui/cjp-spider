@@ -8,13 +8,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * ��ҳ΢��
+ * 主页weibo
  * 
  * @author REAL
  */
 public class HomeWeibo {
-
-	int maxPage = 0;
+	
+	String mod_type;
 
 	long previous_cursor = 0L;
 
@@ -22,12 +22,12 @@ public class HomeWeibo {
 
 	List<Weibo> weibos = new ArrayList<Weibo>();
 
-	public int getMaxPage() {
-		return maxPage;
+	public String getMod_type() {
+		return mod_type;
 	}
 
-	public void setMaxPage(int maxPage) {
-		this.maxPage = maxPage;
+	public void setMod_type(String mod_type) {
+		this.mod_type = mod_type;
 	}
 
 	public long getPrevious_cursor() {
@@ -58,31 +58,25 @@ public class HomeWeibo {
 		HomeWeibo homeWeibo = new HomeWeibo();
 		List<Weibo> weibos = new ArrayList<Weibo>();
 
-		JSONObject jo = new JSONObject(json);
-		homeWeibo.setMaxPage(jo.getInt("maxPage"));
+		JSONObject jo = null;
+		if(json.startsWith("[")){
+			jo = new JSONArray(json).getJSONObject(0);
+		}else if(json.startsWith("{")){
+			jo = new JSONObject(json);
+		}
+		homeWeibo.setMod_type(jo.getString("mod_type"));
 		homeWeibo.setNext_cursor(jo.getLong("next_cursor"));
 		homeWeibo.setPrevious_cursor(jo.getLong("previous_cursor"));
 
-		JSONArray jsonArray = jo.getJSONArray("cards").getJSONObject(0)
-				.getJSONArray("card_group");
+		JSONArray jsonArray = jo.getJSONArray("card_group");
 
 		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObject obj = jsonArray.getJSONObject(i);
 
-			Weibo weibo = new Weibo();
 			JSONObject weiboJsonObj = obj.getJSONObject("mblog");
-			weibo.setMid(weiboJsonObj.getLong("mid"));
-			weibo.setSource(weiboJsonObj.getString("source"));
-			weibo.setCreateTime(weiboJsonObj.getString("created_at"));
-			weibo.setText(weiboJsonObj.getString("text"));
-			weibo.setReportsNum(weiboJsonObj.getInt("reposts_count"));
-			weibo.setCommentsNum(weiboJsonObj.getInt("comments_count"));
-			weibo.setAttitudesNum(weiboJsonObj.getInt("attitudes_count"));
-
+			Weibo weibo = Weibo.fromJson(weiboJsonObj);
 			JSONObject userJsonObj = weiboJsonObj.getJSONObject("user");
-			User user = new User();
-			user.setHeadUrl(userJsonObj.getString("profile_image_url"));
-			user.setScreenName(userJsonObj.getString("screen_name"));
+			User user = User.fromJson(userJsonObj);
 			weibo.setUser(user);
 
 			weibos.add(weibo);

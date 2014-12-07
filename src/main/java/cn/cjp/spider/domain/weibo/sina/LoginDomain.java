@@ -30,6 +30,9 @@ public class LoginDomain {
 		JSONObject jo = new JSONObject(json);
 		
 		loginDomain.retcode = jo.getInt("retcode");
+		if(loginDomain.retcode != LoginDomain.LOGIN_SUCCESS){
+			return null;
+		}
 		loginDomain.msg = jo.getString("msg");
 		JSONObject dataObj = jo.getJSONObject("data");
 		

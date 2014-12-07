@@ -64,7 +64,7 @@ public class Const {
 	 * page : 可以不加，但不可以为空，最小为1 <br>
 	 * next_cursor : 可以不加，但不可以为空
 	 */
-	public static final String HOME_WEIBO_URL = "http://m.weibo.cn/index/feed?format=cards&next_cursor={next_cursor}&page={page}";
+	public static final String HOME_WEIBO_URL = "http://m.weibo.cn/index/feed?format=cards";
 
 	public static final String WEIBOs_OF_USER_URL = "http://m.weibo.cn/page/json?containerid=100505{uid}_-_WEIBO_SECOND_PROFILE_WEIBO&page={page}";
 	

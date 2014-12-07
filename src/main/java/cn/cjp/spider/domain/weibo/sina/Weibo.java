@@ -3,6 +3,8 @@ package cn.cjp.spider.domain.weibo.sina;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -38,8 +40,28 @@ public class Weibo {
 	
 	Weibo srcWeibo;
 	
-	public static Weibo fromJson(JSONObject jsonObj){
+	public static Weibo fromJson(JSONObject weiboJsonObj) throws JSONException{
 		Weibo weibo = new Weibo();
+		weibo.setMid(weiboJsonObj.getLong("mid"));
+		weibo.setSource(weiboJsonObj.getString("source"));
+		weibo.setCreateTime(weiboJsonObj.getString("created_at"));
+		weibo.setText(weiboJsonObj.getString("text"));
+		weibo.setReportsNum(weiboJsonObj.getInt("reposts_count"));
+		weibo.setCommentsNum(weiboJsonObj.getInt("comments_count"));
+		weibo.setAttitudesNum(weiboJsonObj.getInt("attitudes_count"));
+		if(!weiboJsonObj.isNull("pics")){
+			JSONArray picsJsonArray = weiboJsonObj.getJSONArray("pics");
+			for(int i=0; i<picsJsonArray.length(); i++){
+				JSONObject picsJsonObj = picsJsonArray.getJSONObject(i);
+				weibo.getPic_ids().add(picsJsonObj.getString("url"));
+			}
+		}
+		if(!weiboJsonObj.isNull("user")){
+			weibo.setUser(User.fromJson(weiboJsonObj.getJSONObject("user")));
+		}
+		if(!weiboJsonObj.isNull("retweeted_status")){
+			weibo.setSrcWeibo(Weibo.fromJson(weiboJsonObj.getJSONObject("retweeted_status")));
+		}
 		return weibo;
 	}
 
