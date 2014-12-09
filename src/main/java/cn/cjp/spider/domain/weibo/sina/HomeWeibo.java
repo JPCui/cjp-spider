@@ -131,16 +131,16 @@ public class HomeWeibo {
 			newHtml += "<p class=\"default-content txt-xl\">" + weibo.getText()
 					+ "</p>";
 			// 微博图片区域
-			if (weibo.getPic_ids().size() == 1) {
+			if (weibo.getPics().size() == 1) {
 				newHtml += "<div class=\"media-pic\">";
 				newHtml += "<img class=\"loaded\" src=\"http://ww2.sinaimg.cn/thumb180/"
-						+ weibo.getPic_ids().get(0)
+						+ weibo.getPics().get(0)
 						+ ".jpg\" data-node=\"pic\" data-act-type=\"hover\">";
 				newHtml += "</div>";
-			} else if (weibo.getPic_ids().size() > 1) {
+			} else if (weibo.getPics().size() > 1) {
 				newHtml += "<div class=\"media-pic-list\">";
 				newHtml += "<ul>";
-				for (String pic_id : weibo.getPic_ids())
+				for (String pic_id : weibo.getPics())
 					newHtml += "<li><img class=\"loaded\" src=\"http://ww2.sinaimg.cn/thumb180/"
 							+ pic_id
 							+ ".jpg\" data-node=\"pic\" data-act-type=\"hover\"></li>";
@@ -157,16 +157,16 @@ public class HomeWeibo {
 						+ "\" class=\"\">@"+weibo.getSrcWeibo().getUser().getScreenName()+"</a>："
 						+ weibo.getSrcWeibo().getText();
 				newHtml += "</p>";
-				if (weibo.getSrcWeibo().getPic_ids().size() == 1) {
+				if (weibo.getSrcWeibo().getPics().size() == 1) {
 					newHtml += "<div class=\"media-pic\">";
 					newHtml += "<img class=\"loaded\" src=\"http://ww2.sinaimg.cn/thumb180/"
-							+ weibo.getSrcWeibo().getPic_ids().get(0)
+							+ weibo.getSrcWeibo().getPics().get(0)
 							+ ".jpg\" data-node=\"pic\" data-act-type=\"hover\">";
 					newHtml += "</div>";
-				} else if (weibo.getSrcWeibo().getPic_ids().size() > 1) {
+				} else if (weibo.getSrcWeibo().getPics().size() > 1) {
 					newHtml += "<div class=\"media-pic-list\">";
 					newHtml += "<ul>";
-					for (String pic_id : weibo.getSrcWeibo().getPic_ids())
+					for (String pic_id : weibo.getSrcWeibo().getPics())
 						newHtml += "<li><img class=\"loaded\" src=\"http://ww2.sinaimg.cn/thumb180/"
 								+ pic_id
 								+ ".jpg\" data-node=\"pic\" data-act-type=\"hover\"></li>";

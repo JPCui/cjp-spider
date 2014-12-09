@@ -132,6 +132,27 @@ public class SinaWeiboAccess {
 	}
 
 	/**
+	 * 获取个人信息<br>
+	 * 获取第一页时，会有总页数
+	 * @param cookies
+	 * @param page >=1
+	 * @return
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public static String getHomeMsg(Map<String, String> cookies, int page) throws IOException,
+			InterruptedException {
+		String url = Const.HOME_MSG_URL;
+		url += "&page=" + page;
+		Connection conn = getConnection(url);
+		conn.cookies(cookies);
+		conn.method(Method.POST);
+
+		Response response = request(conn);
+		return response.body();
+	}
+
+	/**
 	 * 获取微博评论
 	 * 
 	 * @param cookies

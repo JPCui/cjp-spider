@@ -19,7 +19,7 @@ public class Weibo {
 	// 发布时间
 	String createTime;
 	
-	List<String> pic_ids = new ArrayList<String>();
+	List<String> pics = new ArrayList<String>();
 	
 	/**
 	 * 转发
@@ -53,7 +53,7 @@ public class Weibo {
 			JSONArray picsJsonArray = weiboJsonObj.getJSONArray("pics");
 			for(int i=0; i<picsJsonArray.length(); i++){
 				JSONObject picsJsonObj = picsJsonArray.getJSONObject(i);
-				weibo.getPic_ids().add(picsJsonObj.getString("url"));
+				weibo.getPics().add(picsJsonObj.getString("url"));
 			}
 		}
 		if(!weiboJsonObj.isNull("user")){
@@ -137,14 +137,13 @@ public class Weibo {
 		this.user = user;
 	}
 
-	public List<String> getPic_ids() {
-		return pic_ids;
+	public List<String> getPics() {
+		return pics;
 	}
 
-	public void setPic_ids(List<String> pic_ids) {
-		this.pic_ids = pic_ids;
+	public void setPics(List<String> pics) {
+		this.pics = pics;
 	}
-	
 	
 	
 }

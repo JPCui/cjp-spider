@@ -66,6 +66,13 @@ public class Const {
 	 */
 	public static final String HOME_WEIBO_URL = "http://m.weibo.cn/index/feed?format=cards";
 
+	/**
+	 * 获取当前登录用户的个人消息（包括@，评论，赞等）<br>
+	 * 参数：<br>
+	 * page
+	 */
+	public static final String HOME_MSG_URL = "http://m.weibo.cn/msg/index?format=cards";
+	
 	public static final String WEIBOs_OF_USER_URL = "http://m.weibo.cn/page/json?containerid=100505{uid}_-_WEIBO_SECOND_PROFILE_WEIBO&page={page}";
 	
 	public static final String PLs_OF_WEIBO_URL = "http://m.weibo.cn/{uid}/{mid}/getRCList?format=cards&type=pl&page={page}";

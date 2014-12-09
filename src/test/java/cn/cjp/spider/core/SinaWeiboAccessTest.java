@@ -48,6 +48,12 @@ public class SinaWeiboAccessTest {
 	}
 	
 	@Test
+	public void testGetHomeMsg() throws IOException, InterruptedException, JSONException{
+		String weibosJson = SinaWeiboAccess.getHomeMsg(cookies, 1);
+		System.out.println(new JSONArray(weibosJson));
+	}
+	
+	@Test
 	public void testPubWeibo() throws IOException, InterruptedException{
 		Map<String, String> datas = new HashMap<String, String>();
 		long time = new Date().getTime();
