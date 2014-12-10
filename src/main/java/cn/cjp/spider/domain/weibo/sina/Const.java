@@ -35,8 +35,9 @@ public class Const {
 	public static final String LOGIN_URL = "https://passport.sina.cn/sso/login";
 	/**
 	 * 获取附近位置<br>
-	 * lat : <br> 纬度
-	 * lon : <br> 经度
+	 * lat : 纬度 <br>
+	 * lon : 经度 <br>
+	 * q：查询条件（关键词）（自己添加）<br>
 	 */
 	public static final String GET_NEAR_BY_POIS = "http://m.weibo.cn/interestnew/poi/getNearbyPois?offset=0&getLocation=1&lat={lat}&long={lon}&format=cards";
 	/**
@@ -81,6 +82,30 @@ public class Const {
 	
 	public static final String ATTITUDEs_OF_WEIBO_URL = "http://m.weibo.cn/attitudesDeal/getAttitudeList?id={mid}&format=cards&page={page}";
 	
+	/**
+	 * 获取'@'列表
+	 */
+	public static final String AT_LIST_URL = "http://m.weibo.cn/attention/getAtList";
+
+	/**
+	 * 根据关键词获取'@'列表<br>
+	 * 参数：<br>
+	 * keyword <br>
+	 * page <br>
+	 */
+	public static final String AT_LIST_BY_KEY_URL = "http://m.weibo.cn/attention/getAttentionList?keyword={keyword}&page={page}&format=cards";
+	
+	/**
+	 * 获取topic列表
+	 */
+	public static final String TOPIC_LIST_URL = "http://m.weibo.cn/searchs/searchTopic";
+	
+	/**
+	 * 根据keyword获取topic列表<br>
+	 * 参数： <br>
+	 * keyword <br>
+	 */
+	public static final String TOPIC_LIST_BY_KEY_URL = "http://m.weibo.cn/searchs/searchTopicByKeyword?q={keyword}";
 	
 	
 }

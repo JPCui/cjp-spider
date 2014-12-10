@@ -23,17 +23,22 @@ import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 
 import cn.cjp.spider.domain.weibo.sina.Const;
+import cn.cjp.spider.domain.weibo.sina.StatusPubWeibo;
 
 /**
  * 
  * @function <br>
  *           {@link SinaWeiboAccess#getAttitudesOfWeibo(Map, String, int)}<br>
+ *           {@link SinaWeiboAccess#getHomeMsg(Map, int)}<br>
  *           {@link SinaWeiboAccess#getHomeWeibo(Map, String, String)}<br>
  *           {@link SinaWeiboAccess#getPLsOfWeibo(Map, String, String, int)}<br>
  *           {@link SinaWeiboAccess#getWeibosOfUser(Map, String, int)}<br>
  *           {@link SinaWeiboAccess#getZFsOfWeibo(Map, String, String, int)}<br>
  *           {@link SinaWeiboAccess#login(Map)}<br>
+ *           {@link SinaWeiboAccess#publishWeibo(Map, Map)}<br>
  *           {@link SinaWeiboAccess#pubWeibo(Map, Map)}<br>
+ *           {@link SinaWeiboAccess#pubMWeibo(Map, String, Map)}<br>
+ *           {@link SinaWeiboAccess#}<br>
  * @author REAL
  * 
  */
@@ -81,6 +86,109 @@ public class SinaWeiboAccess {
 		}
 
 		return response;
+	}
+	
+	/**
+	 * 获取位置列表
+	 * @param cookies
+	 * @param lon 
+	 * @param lat
+	 * @see Const#GET_NEAR_BY_POIS
+	 * @return
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public static String getPosList(Map<String, String> cookies,String q,double lon, double lat) throws IOException, InterruptedException{
+		String url = Const.GET_NEAR_BY_POIS;
+		url = url.replace("{lat}", lat+"");
+		url = url.replace("{lon}", lon+"");
+		if(null != q){
+			url += "&q="+q;
+		}
+		Connection conn = getConnection(url);
+		conn.cookies(cookies);
+		conn.method(Method.POST);
+
+		Response response = request(conn);
+		return response.body();
+	}
+	
+	/**
+	 * 获取'@'列表
+	 * @param cookies
+	 * @see Const#AT_LIST_URL
+	 * @return
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public static String getAtList(Map<String, String> cookies) throws IOException, InterruptedException{
+		String url = Const.AT_LIST_URL;
+		Connection conn = getConnection(url);
+		conn.cookies(cookies);
+		conn.method(Method.POST);
+
+		Response response = request(conn);
+		return response.body();
+	}
+	
+	/**
+	 * 根据关键词获取'@'列表
+	 * @param cookies
+	 * @param keyword 关键词
+	 * @param page 页数
+	 * @see Const#AT_LIST_BY_KEY_URL
+	 * @return
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public static String getAtListByKey(Map<String, String> cookies, String keyword, int page) throws IOException, InterruptedException{
+		String url = Const.AT_LIST_BY_KEY_URL;
+		url = url.replace("{keyword}", keyword);
+		url = url.replace("{page}", page+"");
+		Connection conn = getConnection(url);
+		conn.cookies(cookies);
+		conn.method(Method.POST);
+
+		Response response = request(conn);
+		return response.body();
+	}
+	
+	/**
+	 * 获取话题列表
+	 * @param cookies
+	 * @see Const#TOPIC_LIST_URL
+	 * @return
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public static String getTopicList(Map<String, String> cookies) throws IOException, InterruptedException{
+		String url = Const.TOPIC_LIST_URL;
+		Connection conn = getConnection(url);
+		conn.cookies(cookies);
+		conn.method(Method.POST);
+
+		Response response = request(conn);
+		return response.body();
+	}
+	
+	/**
+	 * 根据关键词获取话题列表
+	 * @param cookies
+	 * @param keyword 关键词
+	 * @see Const#TOPIC_LIST_BY_KEY_URL
+	 * @return
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public static String getTopicListByKey(Map<String, String> cookies, String keyword) throws IOException, InterruptedException{
+		String url = Const.TOPIC_LIST_BY_KEY_URL;
+		url = url.replace("{keyword}", keyword);
+		Connection conn = getConnection(url);
+		conn.cookies(cookies);
+		conn.method(Method.POST);
+
+		Response response = request(conn);
+		return response.body();
 	}
 
 	/**
@@ -234,6 +342,40 @@ public class SinaWeiboAccess {
 
 		Response response = request(conn);
 		return response.body();
+	}
+
+	/**
+	 * 
+	 * @param cookies
+	 * @param datas
+	 *            <pre>
+	 * **** 发布内容 ****
+	 * content  我是一条微博
+	 * 
+	 * **** 发布图片（逗号分隔每一个picId） ****
+	 * picId  picId1,picId2
+	 * 
+	 * **** 发布位置信息 ****
+	 * poiid	B2094656D465AAFB4099 // 位置信息只需要poiid
+	 * </pre>
+	 * @return
+	 * @throws IOException
+	 * @throws InterruptedException
+	 * @throws JSONException 
+	 */
+	public static StatusPubWeibo publishWeibo(Map<String, String> cookies,
+			Map<String, String> datas) throws IOException, InterruptedException, JSONException {
+		String url = Const.B_PUB_WEIBO;
+		Connection conn = getConnection(url);
+		conn.cookies(cookies);
+		conn.data(datas);
+		conn.method(Method.POST);
+
+		Response response = request(conn);
+		
+		StatusPubWeibo statusPubWeibo = StatusPubWeibo.fromJson(response.body());
+		
+		return statusPubWeibo;
 	}
 
 	/**

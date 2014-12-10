@@ -12,6 +12,8 @@ public class Weibo {
 
 	long mid;
 	
+	String bid;
+	
 	String text;
 	
 	String source;
@@ -20,6 +22,12 @@ public class Weibo {
 	String createTime;
 	
 	List<String> pics = new ArrayList<String>();
+	
+	/** 是否已赞 */
+	int attitudeStatus;
+	
+	/** 赞的数量 */
+	int likeCount;
 	
 	/**
 	 * 转发
@@ -48,6 +56,9 @@ public class Weibo {
 		weibo.setText(weiboJsonObj.getString("text"));
 		weibo.setReportsNum(weiboJsonObj.getInt("reposts_count"));
 		weibo.setCommentsNum(weiboJsonObj.getInt("comments_count"));
+		weibo.setAttitudeStatus(weiboJsonObj.getInt("attitudes_status"));
+		weibo.setLikeCount(weiboJsonObj.getInt("like_count"));
+		weibo.setBid(weiboJsonObj.getString("bid"));
 		weibo.setAttitudesNum(weiboJsonObj.getInt("attitudes_count"));
 		if(!weiboJsonObj.isNull("pics")){
 			JSONArray picsJsonArray = weiboJsonObj.getJSONArray("pics");
@@ -143,6 +154,30 @@ public class Weibo {
 
 	public void setPics(List<String> pics) {
 		this.pics = pics;
+	}
+
+	public int getAttitudeStatus() {
+		return attitudeStatus;
+	}
+
+	public void setAttitudeStatus(int attitudeStatus) {
+		this.attitudeStatus = attitudeStatus;
+	}
+
+	public int getLikeCount() {
+		return likeCount;
+	}
+
+	public void setLikeCount(int likeCount) {
+		this.likeCount = likeCount;
+	}
+
+	public String getBid() {
+		return bid;
+	}
+
+	public void setBid(String bid) {
+		this.bid = bid;
 	}
 	
 	
