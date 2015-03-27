@@ -107,5 +107,9 @@ public class Const {
 	 */
 	public static final String TOPIC_LIST_BY_KEY_URL = "http://m.weibo.cn/searchs/searchTopicByKeyword?q={keyword}";
 	
+	/**
+	 * 获取当前登录用户的个人资料
+	 */
+	public static final String GET_ME_URL = "https://m.weibo.cn/home/me?format=cards";
 	
 }
