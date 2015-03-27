@@ -79,7 +79,7 @@ public class SinaWeiboAccess {
 			try {
 				response = conn.execute();
 			} catch (SocketTimeoutException e) {
-				Thread.sleep(2000);
+				Thread.sleep(10000);
 				continue;
 			}
 			break;
