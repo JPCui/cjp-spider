@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Connection;
@@ -43,6 +44,10 @@ import cn.cjp.spider.domain.weibo.sina.StatusPubWeibo;
  * 
  */
 public class SinaWeiboAccess {
+	/**
+	 * Logger for this class
+	 */
+	private static final Logger logger = Logger.getLogger(SinaWeiboAccess.class);
 
 	public SinaWeiboAccess() {
 	}
@@ -75,35 +80,42 @@ public class SinaWeiboAccess {
 			InterruptedException {
 		Response response = null;
 
-		while (true) {
+		int times = 3;
+		while (times-- != 0) {
 			try {
-				response = conn.execute();
+				response = conn.referrer("http://m.weibo.cn/")
+						.ignoreHttpErrors(true).ignoreContentType(true)
+						.followRedirects(true).execute();
 			} catch (SocketTimeoutException e) {
+				e.printStackTrace();
 				Thread.sleep(10000);
 				continue;
 			}
 			break;
 		}
-
+		
+		logger.info(response.body());
 		return response;
 	}
-	
+
 	/**
 	 * 获取位置列表
+	 * 
 	 * @param cookies
-	 * @param lon 
+	 * @param lon
 	 * @param lat
 	 * @see Const#GET_NEAR_BY_POIS
 	 * @return
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public static String getPosList(Map<String, String> cookies,String q,double lon, double lat) throws IOException, InterruptedException{
+	public static String getPosList(Map<String, String> cookies, String q,
+			double lon, double lat) throws IOException, InterruptedException {
 		String url = Const.GET_NEAR_BY_POIS;
-		url = url.replace("{lat}", lat+"");
-		url = url.replace("{lon}", lon+"");
-		if(null != q){
-			url += "&q="+q;
+		url = url.replace("{lat}", lat + "");
+		url = url.replace("{lon}", lon + "");
+		if (null != q) {
+			url += "&q=" + q;
 		}
 		Connection conn = getConnection(url);
 		conn.cookies(cookies);
@@ -112,16 +124,18 @@ public class SinaWeiboAccess {
 		Response response = request(conn);
 		return response.body();
 	}
-	
+
 	/**
 	 * 获取'@'列表
+	 * 
 	 * @param cookies
 	 * @see Const#AT_LIST_URL
 	 * @return
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public static String getAtList(Map<String, String> cookies) throws IOException, InterruptedException{
+	public static String getAtList(Map<String, String> cookies)
+			throws IOException, InterruptedException {
 		String url = Const.AT_LIST_URL;
 		Connection conn = getConnection(url);
 		conn.cookies(cookies);
@@ -130,21 +144,25 @@ public class SinaWeiboAccess {
 		Response response = request(conn);
 		return response.body();
 	}
-	
+
 	/**
 	 * 根据关键词获取'@'列表
+	 * 
 	 * @param cookies
-	 * @param keyword 关键词
-	 * @param page 页数
+	 * @param keyword
+	 *            关键词
+	 * @param page
+	 *            页数
 	 * @see Const#AT_LIST_BY_KEY_URL
 	 * @return
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public static String getAtListByKey(Map<String, String> cookies, String keyword, int page) throws IOException, InterruptedException{
+	public static String getAtListByKey(Map<String, String> cookies,
+			String keyword, int page) throws IOException, InterruptedException {
 		String url = Const.AT_LIST_BY_KEY_URL;
 		url = url.replace("{keyword}", keyword);
-		url = url.replace("{page}", page+"");
+		url = url.replace("{page}", page + "");
 		Connection conn = getConnection(url);
 		conn.cookies(cookies);
 		conn.method(Method.POST);
@@ -152,16 +170,18 @@ public class SinaWeiboAccess {
 		Response response = request(conn);
 		return response.body();
 	}
-	
+
 	/**
 	 * 获取话题列表
+	 * 
 	 * @param cookies
 	 * @see Const#TOPIC_LIST_URL
 	 * @return
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public static String getTopicList(Map<String, String> cookies) throws IOException, InterruptedException{
+	public static String getTopicList(Map<String, String> cookies)
+			throws IOException, InterruptedException {
 		String url = Const.TOPIC_LIST_URL;
 		Connection conn = getConnection(url);
 		conn.cookies(cookies);
@@ -171,16 +191,30 @@ public class SinaWeiboAccess {
 		return response.body();
 	}
 	
+	public static String getLoginedUser(Map<String, String> cookies) throws IOException, InterruptedException{
+		String url = Const.GET_ME_URL;
+		Connection conn = getConnection(url);
+		conn.cookies(cookies);
+		conn.method(Method.POST);
+
+		Response response = request(conn);
+		
+		return response.body();
+	}
+
 	/**
 	 * 根据关键词获取话题列表
+	 * 
 	 * @param cookies
-	 * @param keyword 关键词
+	 * @param keyword
+	 *            关键词
 	 * @see Const#TOPIC_LIST_BY_KEY_URL
 	 * @return
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public static String getTopicListByKey(Map<String, String> cookies, String keyword) throws IOException, InterruptedException{
+	public static String getTopicListByKey(Map<String, String> cookies,
+			String keyword) throws IOException, InterruptedException {
 		String url = Const.TOPIC_LIST_BY_KEY_URL;
 		url = url.replace("{keyword}", keyword);
 		Connection conn = getConnection(url);
@@ -242,14 +276,16 @@ public class SinaWeiboAccess {
 	/**
 	 * 获取个人信息<br>
 	 * 获取第一页时，会有总页数
+	 * 
 	 * @param cookies
-	 * @param page >=1
+	 * @param page
+	 *            >=1
 	 * @return
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public static String getHomeMsg(Map<String, String> cookies, int page) throws IOException,
-			InterruptedException {
+	public static String getHomeMsg(Map<String, String> cookies, int page)
+			throws IOException, InterruptedException {
 		String url = Const.HOME_MSG_URL;
 		url += "&page=" + page;
 		Connection conn = getConnection(url);
@@ -361,10 +397,11 @@ public class SinaWeiboAccess {
 	 * @return
 	 * @throws IOException
 	 * @throws InterruptedException
-	 * @throws JSONException 
+	 * @throws JSONException
 	 */
 	public static StatusPubWeibo publishWeibo(Map<String, String> cookies,
-			Map<String, String> datas) throws IOException, InterruptedException, JSONException {
+			Map<String, String> datas) throws IOException,
+			InterruptedException, JSONException {
 		String url = Const.B_PUB_WEIBO;
 		Connection conn = getConnection(url);
 		conn.cookies(cookies);
@@ -372,9 +409,10 @@ public class SinaWeiboAccess {
 		conn.method(Method.POST);
 
 		Response response = request(conn);
-		
-		StatusPubWeibo statusPubWeibo = StatusPubWeibo.fromJson(response.body());
-		
+
+		StatusPubWeibo statusPubWeibo = StatusPubWeibo
+				.fromJson(response.body());
+
 		return statusPubWeibo;
 	}
 
@@ -517,8 +555,8 @@ public class SinaWeiboAccess {
 	 * 上传方法 返回上传完毕的文件名
 	 * 
 	 * @return 如果正常，返回：{"ok":1,"msg":null,"pic_url":
-	 *         "http:\/\/ww4.sinaimg.cn\/thumbnail\/da66c124jw1el0lhc07x7j200w0owmxg.jpg","pic_id":"da66c124jw1el0lhc07x7j200w0owmxg
-	 *         " } <br>
+	 *         "http:\/\/ww4.sinaimg.cn\/thumbnail\/da66c124jw1el0lhc07x7j200w0owmxg.jpg","pic_id":"da66c124jw1el0lhc07x7j200w0owm
+	 *         x g " } <br>
 	 *         如果通信异常，返回：{\"ok\":0,\"msg\":"000"}
 	 */
 	private static String upload(Map<String, String> cookieMap,

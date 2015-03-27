@@ -73,7 +73,6 @@ public class SinaWeiboAccessTest {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	@Test
 	public void testMPubWeibo() throws IOException, InterruptedException{
 		Map<String, String> datas = new HashMap<String, String>();
 //		// 校验参数（两个参数同时校验）
@@ -97,7 +96,6 @@ public class SinaWeiboAccessTest {
 		String json = SinaWeiboAccess.getWeibosOfUser(cookies, "1813080181", 1);
 		
 		json = CodeUtil.unicodeToString(json);
-		System.out.println(json);
 	}
 	
 	@Test
@@ -105,7 +103,6 @@ public class SinaWeiboAccessTest {
 		String json = SinaWeiboAccess.getPLsOfWeibo(cookies, "1813080181", "3776550627257375", 1);
 		
 		json = CodeUtil.unicodeToString(json);
-		System.out.println(json);
 	}
 	
 	@Test
@@ -113,7 +110,6 @@ public class SinaWeiboAccessTest {
 		String json = SinaWeiboAccess.getAttitudesOfWeibo(cookies, "3776550627257375", 1);
 		
 		json = CodeUtil.unicodeToString(json);
-		System.out.println(json);
 	}
 	
 }

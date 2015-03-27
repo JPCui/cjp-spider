@@ -3,9 +3,9 @@ package cn.cjp.spider.domain.tencent.pengyou;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -16,9 +16,9 @@ import cn.cjp.base.utils.FileUtil;
 public class PengyouSpider {
 
 	String url = "http://friend.pengyou.com/index.php?mod=friends&act=tab&u={hash}&adtag=from_profile_menu_1";
-	String currUserHash = "c265e4bd629300c5e4d4e068ddf80f3cd270af60c7ae8ff0";
+	String currUserHash = "ef6d3c79c83953a529c68a322691850592888ecbb0ca434b";
 
-	Map<String, Boolean> userSpiderring = new HashMap<String, Boolean>();
+	Set<String> userSpiderring = new HashSet<String>();
 	
 	String dirStr = "D:\\__JAVA__\\pengyou";
 	
@@ -27,7 +27,7 @@ public class PengyouSpider {
 		File fileDir = new File(dirStr);
 		File[] files = fileDir.listFiles();
 		for(File file : files){
-			userSpiderring.put(file.getName(), true);
+			userSpiderring.add(file.getName());
 		}
 		
 	}
@@ -45,11 +45,11 @@ public class PengyouSpider {
 
 			for (int i = 0; i < hashs.size(); i++) {
 				currUserHash = hashs.get(i);
-				if (userSpiderring.containsKey(currUserHash)) {
+				if (userSpiderring.contains(currUserHash)) {
 					System.out.println(currUserHash + "已存在");
 					continue;
 				}
-				userSpiderring.put(currUserHash, true);
+				userSpiderring.add(currUserHash);
 				String json = this.getJson(currUserHash);
 				if (json == null)
 					continue;
@@ -58,7 +58,7 @@ public class PengyouSpider {
 
 				for (int j = 0; j < users.size(); j++) {
 					PengyouUser user = users.get(j);
-					if (!userSpiderring.containsKey(user.hash)) {
+					if (!userSpiderring.contains(user.hash)) {
 						tempHashs.add(user.hash);
 					}
 
@@ -89,16 +89,16 @@ public class PengyouSpider {
 		Connection conn = Jsoup.connect(url.replace("{hash}", userHash))
 				.timeout(30000);
 
-		conn.cookie("bai_ck", "2ad2a46286458cb889162897b4e94d94_1427334787");
-		conn.cookie("pst", "1427270878");
-		conn.cookie("pt2gguin", "o1367471019");
+		conn.cookie("bai_ck", "8e5f1bb2ab85bfe247c983049db87a26_1427677417");
+		conn.cookie("pst", "1427677366");
+		conn.cookie("pt2gguin", "o0624498030");
 		conn.cookie("ptcz",
 				"23a52e73a1dbac345ddf68ef2793e979f8c4a611b6f7ee0747cfb0d75b0d51d7");
 		conn.cookie("ptisp", "ctc");
-		conn.cookie("ptui_loginuin", "1367471019");
+		conn.cookie("ptui_loginuin", "624498030");
 		conn.cookie("pvid", "2560682208");
-		conn.cookie("skey", "@dy6K6y19j");
-		conn.cookie("uin", "o1367471019");
+		conn.cookie("skey", "@lAmeanNWA"); //
+		conn.cookie("uin", "o0624498030");
 
 		Document doc = null;
 		try {
