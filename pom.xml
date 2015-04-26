@@ -18,9 +18,8 @@
 		<servlet.version>2.5</servlet.version>
 		<cglib.version>2.2.2</cglib.version>
 		<validation.api.version>1.1.0.Final</validation.api.version>
-		<slf4j.version>1.6.4</slf4j.version>
 		<jdk.tools.version>1.6</jdk.tools.version>
-		<httpclient.version>4.3.2</httpclient.version>
+		<httpclient.version>4.2.3</httpclient.version>
 
 		<spring.version>3.2.9.RELEASE</spring.version>
 
@@ -42,11 +41,6 @@
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>20080701</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.5</version>
 		</dependency>
 		<dependency>
 			<groupId>jstl</groupId>
