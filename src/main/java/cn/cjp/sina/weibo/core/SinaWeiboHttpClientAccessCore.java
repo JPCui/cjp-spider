@@ -1,6 +1,7 @@
 package cn.cjp.sina.weibo.core;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,6 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
-import cn.cjp.sina.weibo.analyzer.GetFansAnalyzer;
 import cn.cjp.sina.weibo.analyzer.ResponseJsonAnalyzer;
 import cn.cjp.sina.weibo.domain.Const;
 import cn.cjp.sina.weibo.domain.LoginDomain;
@@ -34,7 +34,6 @@ public class SinaWeiboHttpClientAccessCore extends HttpClientCore{
 			.getLogger(SinaWeiboHttpClientAccessCore.class);
 
 	private SinaWeiboHttpClientAccessCore() {
-
 	}
 
 	/**
@@ -47,7 +46,7 @@ public class SinaWeiboHttpClientAccessCore extends HttpClientCore{
 	 * @throws ClientProtocolException
 	 */
 	public static SinaWeiboHttpClientAccessCore getInstance(String username,
-			String password) throws ClientProtocolException, IOException {
+			String password){
 		SinaWeiboHttpClientAccessCore sinaWeiboAccessCore = new SinaWeiboHttpClientAccessCore();
 		boolean isLogined = sinaWeiboAccessCore.login(username, password);
 
@@ -67,8 +66,7 @@ public class SinaWeiboHttpClientAccessCore extends HttpClientCore{
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	private boolean login(String username, String password)
-			throws ClientProtocolException, IOException {
+	private boolean login(String username, String password){
 		// set request params
 		Map<String, String> datas = new HashMap<String, String>();
 		datas.put("username", username);
@@ -106,8 +104,7 @@ public class SinaWeiboHttpClientAccessCore extends HttpClientCore{
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
-	public synchronized List<UserDomain> getFansByUid(String uid, int page)
-			throws ClientProtocolException, IOException {
+	public synchronized List<UserDomain> requestFansByUid(String uid, int page) {
 
 		String url = Const.FANS_URL;
 		url = url.replace("{uid}", uid);
@@ -115,9 +112,18 @@ public class SinaWeiboHttpClientAccessCore extends HttpClientCore{
 
 		HttpResponse response = this.executeGet(url, null);
 		HttpEntity entity = response.getEntity();
-		String json = EntityUtils.toString(entity, "UTF-8");
+		String json = null;
+		try {
+			json = EntityUtils.toString(entity, "UTF-8");
+		} catch (ParseException e) {
+			logger.error("请求数据转换失败", e);
+			return new ArrayList<UserDomain>();
+		} catch (IOException e) {
+			logger.error("请求数据转换失败", e);
+			return new ArrayList<UserDomain>();
+		}
 
-		List<UserDomain> fans = GetFansAnalyzer.analyzerJson(json);
+		List<UserDomain> fans = ResponseJsonAnalyzer.analyzerGetFans(json);
 
 		return fans;
 	}
@@ -132,7 +138,7 @@ public class SinaWeiboHttpClientAccessCore extends HttpClientCore{
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
-	public synchronized List<UserDomain> getFollowsByUid(String uid, int page)
+	public synchronized List<UserDomain> requestFollowsByUid(String uid, int page)
 			throws ClientProtocolException, IOException {
 
 		String url = Const.FOLLOWERS_URL;
@@ -143,7 +149,7 @@ public class SinaWeiboHttpClientAccessCore extends HttpClientCore{
 		HttpEntity entity = response.getEntity();
 		String json = EntityUtils.toString(entity, "UTF-8");
 
-		List<UserDomain> follows = GetFansAnalyzer.analyzerJson(json);
+		List<UserDomain> follows = ResponseJsonAnalyzer.analyzerGetFans(json);
 
 		return follows;
 	}

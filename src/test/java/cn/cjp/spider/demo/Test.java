@@ -1,21 +1,15 @@
 package cn.cjp.spider.demo;
 
-public class Test extends Parent{
+import org.apache.commons.lang.math.RandomUtils;
 
-	public Test(){
-		System.out.println(Test.class);
-	}
-	
+public class Test{
+
 	public static void main(String[] args) {
-		new Test();
+		
+		for(int i=0; i<100; i++){
+			System.out.println(RandomUtils.nextInt(10));
+		}
+		
 	}
 	
-	
-	
-}
-class Parent
-{
-	public Parent() {
-		System.out.println(Parent.class);
-	}
 }
