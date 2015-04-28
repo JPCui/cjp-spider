@@ -12,8 +12,8 @@ public class SinaWeiboSpiderTest {
 		
 		
 		
-		for (int i = 0; i < 100; i++) {
+//		for (int i = 0; i < 5; i++) {
 			new Thread(spider).start();
-		}
+//		}
 	}
 }

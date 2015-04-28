@@ -16,6 +16,7 @@ import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
@@ -37,6 +38,9 @@ public class HttpClientCore {
 
 	public DefaultHttpClient httpClient = null;
 
+	/**
+	 * 初始化HttpClient
+	 */
 	public HttpClientCore() {
 		// 初始化连接池
 		PoolingClientConnectionManager connManager = new PoolingClientConnectionManager();
@@ -53,6 +57,7 @@ public class HttpClientCore {
 
 	public synchronized HttpResponse executePost(String url, Map<String, String> headers,
 			Map<String, String> datas) {
+		
 		HttpPost httpPost = new HttpPost(url);
 		// set cookie
 		if (!StringUtils.isBlank(loginCookie)) {
@@ -95,6 +100,8 @@ public class HttpClientCore {
 					loginCookie += cookie.getName()+"="+cookie.getValue()+";";
 				}
 			}
+		} catch (HttpHostConnectException e) {
+			logger.warn("代理服务器连接拒绝", e);
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

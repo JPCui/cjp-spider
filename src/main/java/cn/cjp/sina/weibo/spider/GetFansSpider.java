@@ -5,25 +5,36 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.http.HttpHost;
+import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.log4j.Logger;
 
 import cn.cjp.base.utils.FileUtil;
-import cn.cjp.sina.weibo.analyzer.GetFansAnalyzer;
-import cn.cjp.sina.weibo.core.SinaWeiboAccessCore;
+import cn.cjp.sina.weibo.core.SinaWeiboHttpClientAccessCore;
 import cn.cjp.sina.weibo.domain.UserDomain;
+import cn.cjp.sina.weibo.proxy.bean.HttpProxyBean;
+import cn.cjp.sina.weibo.proxy.service.HttpProxyService;
 
-@SuppressWarnings("deprecation")
 public class GetFansSpider implements Runnable {
 
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger
-			.getLogger(GetFansSpider.class);
+	private static final Logger logger = Logger.getLogger(GetFansSpider.class);
 
-	SinaWeiboAccessCore accessCore = null;
+	SinaWeiboHttpClientAccessCore accessCore = null;
+	private HttpHost httpHost = null;
+	/**
+	 * 已抓取的Uid队列
+	 */
 	private static Set<String> grabbedUidSet = new HashSet<String>();
+	/**
+	 * 等待抓取的Uid队列
+	 */
 	private static List<String> waitingUidList = new ArrayList<String>();
+	/**
+	 * 正在抓取的Uid队列
+	 */
 	private static Set<String> grabbingUidSet = new HashSet<String>();
 
 	private int grabPageNum = 10;
@@ -34,16 +45,61 @@ public class GetFansSpider implements Runnable {
 	private static String savedFileDir = "";
 
 	/**
-	 * 设置账号
+	 * Instantiation DefaultSpider
+	 */
+	public GetFansSpider() {
+	}
+
+	/**
+	 * Instantiation ProxySpider
+	 * @param httpProxyBean
+	 *            an object of {@link HttpProxyBean}
+	 */
+	public GetFansSpider(HttpProxyBean httpProxyBean) {
+		httpHost = new HttpHost(httpProxyBean.getHost(),
+				httpProxyBean.getPort());
+	}
+
+	/**
+	 * setting acount for logging on to sina weibo
 	 * 
 	 * @param username
 	 * @param password
 	 */
 	public void setAcount(String username, String password) {
 
-		accessCore = SinaWeiboAccessCore.getInstance(username, password);
-		// 初始化等待队列
-		waitingUidList.add("5574133962");
+		accessCore = SinaWeiboHttpClientAccessCore.getInstance(username,
+				password);
+		// 登录成功，才可以加上代理进行后续操作
+		if (this.httpHost != null) {
+			HttpProxyBean proxyBean = HttpProxyService.getRandomProxy();
+			HttpHost httpHost = new HttpHost(proxyBean.getHost(),
+					proxyBean.getPort());
+			accessCore.httpClient.getParams().setParameter(
+					ConnRoutePNames.DEFAULT_PROXY, httpHost);
+			logger.info("setting proxy ：" + httpHost.getHostName() + ":"
+					+ httpHost.getPort());
+		}
+	}
+
+	/**
+	 * 初始化待抓取队列
+	 * 
+	 * @param uid
+	 *            （UID for test：5574133962）
+	 */
+	public void initWaitingUidList(String uid) {
+		waitingUidList.add(uid);
+	}
+
+	/**
+	 * 初始化待抓取队列
+	 * 
+	 * @param uids
+	 *            （UID for test：5574133962）
+	 */
+	public void initWaitingUidList(List<String> uids) {
+		waitingUidList.addAll(uids);
 	}
 
 	/**
@@ -108,10 +164,9 @@ public class GetFansSpider implements Runnable {
 	private void toGrab() {
 		String grabbingUid = borrowOne();
 		for (int i = 1; i <= grabPageNum; i++) {
-			// 抓取Json
-			String json = accessCore.getFansByUid(grabbingUid, i);
-			// 解析Json
-			List<UserDomain> fansList = GetFansAnalyzer.analyzerJson(json);
+			// 抓取,解析Json
+			List<UserDomain> fansList = accessCore.requestFansByUid(
+					grabbingUid, i);
 			if (fansList.size() == 0) {
 				break;
 			}

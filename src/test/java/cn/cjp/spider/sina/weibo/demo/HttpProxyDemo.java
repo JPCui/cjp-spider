@@ -1,11 +1,4 @@
-/**
- * 
- */
-/**
- * @author REAL
- *
- */
-package cn.cjp.sina.weibo.core.proxy;
+package cn.cjp.spider.sina.weibo.demo;
 
 import java.io.IOException;
 
@@ -19,7 +12,7 @@ import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
-public class HttpClientProxy{
+public class HttpProxyDemo{
 	
 	public static void main(String[] args) throws ClientProtocolException, IOException {
 		

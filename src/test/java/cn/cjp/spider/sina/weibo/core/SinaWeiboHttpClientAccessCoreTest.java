@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Test;
+
 import cn.cjp.sina.weibo.core.SinaWeiboHttpClientAccessCore;
 import cn.cjp.sina.weibo.domain.StatusPubWeibo;
-
-import org.junit.Test;
 
 public class SinaWeiboHttpClientAccessCoreTest {
 	

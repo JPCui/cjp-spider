@@ -6,7 +6,8 @@ import java.util.Map;
 public class Const {
 
 	/**
-	 * @deprecated use {@link #HEADER_FOR_LOGIN} OR {@link #HEADER_DEFAULT} instead
+	 * @deprecated use {@link #HEADER_FOR_LOGIN} OR {@link #HEADER_DEFAULT}
+	 *             instead
 	 */
 	@SuppressWarnings("serial")
 	public static final Map<String, String> header = new HashMap<String, String>() {
@@ -15,19 +16,23 @@ public class Const {
 					"https://passport.sina.cn/signin/login?entry=mweibo&res=wel&wm=3349&r=http%3A%2F%2Fm.weibo.cn%2F");
 			put("User-Agent",
 					"Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
-//			put("User-Agent",
-//					"Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1C28 Safari/419.3");
-//			put("User-Agent",
-//					"HUAWEI G610-U00_4.2.1_weibo_4.6.1_android");
+			// put("User-Agent",
+			// "Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1C28 Safari/419.3");
+			// put("User-Agent",
+			// "HUAWEI G610-U00_4.2.1_weibo_4.6.1_android");
 			put("Host", "passport.sina.cn");
 		}
 	};
 	/**
 	 * HTTP header for login
 	 */
-	@SuppressWarnings("serial")
 	public static final Map<String, String> HEADER_FOR_LOGIN = new HashMap<String, String>() {
+		private static final long serialVersionUID = -8947068432793000113L;
 		{
+//			put("Accept", "application/json, text/javascript, */*; q=0.01");
+//			put("Accept-Encoding", "gzip, deflate");
+//			put("Accept-Language", "zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3");
+//			put("X-Requested-With", "XMLHttpRequest");
 			put("Referer",
 					"https://passport.sina.cn/signin/login?entry=mweibo&res=wel&wm=3349&r=http%3A%2F%2Fm.weibo.cn%2F");
 			put("User-Agent",
@@ -38,16 +43,20 @@ public class Const {
 	/**
 	 * HTTP header for request except for login
 	 */
-	@SuppressWarnings("serial")
 	public static final Map<String, String> HEADER_DEFAULT = new HashMap<String, String>() {
+		private static final long serialVersionUID = 4178503057499842033L;
 		{
+//			put("Accept", "application/json, text/javascript, */*; q=0.01");
+//			put("Accept-Encoding", "gzip, deflate");
+//			put("Accept-Language", "zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3");
+//			put("X-Requested-With", "XMLHttpRequest");
 			put("User-Agent",
 					"Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
 			put("Host", "m.weibo.cn");
 			put("Referer", "http://m.weibo.cn");
 		}
 	};
-	
+
 	/**
 	 * 获取模糊位置<br>
 	 * Method : GET<br>
@@ -77,22 +86,22 @@ public class Const {
 	 * s : 校验参数
 	 * 
 	 */
-	public static final String M_PUB_WEIBO = "http://api.weibo.cn/2/statuses/send?";	//?gsid=4uaR1a293RPiHX2XyWmf1b5k4dJ
+	public static final String M_PUB_WEIBO = "http://api.weibo.cn/2/statuses/send?"; // ?gsid=4uaR1a293RPiHX2XyWmf1b5k4dJ
 	/**
 	 * 关注列表<br>
-	 * 参数：<br> 
+	 * 参数：<br>
 	 * uid <br>
 	 * page <br>
 	 */
 	public static final String FOLLOWERS_URL = "http://m.weibo.cn/page/json?containerid=100505{uid}_-_FOLLOWERS&page={page}";
 	/**
 	 * 粉丝列表<br>
-	 * 参数：<br> 
+	 * 参数：<br>
 	 * uid <br>
 	 * page <br>
 	 */
 	public static final String FANS_URL = "http://m.weibo.cn/page/json?containerid=100505{uid}_-_FANS&page={page}";
-	
+
 	/**
 	 * 用于发微博时，预上传图片
 	 */
@@ -132,7 +141,7 @@ public class Const {
 	 * 微博赞
 	 */
 	public static final String ATTITUDEs_OF_WEIBO_URL = "http://m.weibo.cn/attitudesDeal/getAttitudeList?id={mid}&format=cards&page={page}";
-	
+
 	/**
 	 * 获取'@'列表
 	 */
@@ -145,22 +154,22 @@ public class Const {
 	 * page <br>
 	 */
 	public static final String AT_LIST_BY_KEY_URL = "http://m.weibo.cn/attention/getAttentionList?keyword={keyword}&page={page}&format=cards";
-	
+
 	/**
 	 * 获取topic列表
 	 */
 	public static final String TOPIC_LIST_URL = "http://m.weibo.cn/searchs/searchTopic";
-	
+
 	/**
 	 * 根据keyword获取topic列表<br>
 	 * 参数： <br>
 	 * keyword <br>
 	 */
 	public static final String TOPIC_LIST_BY_KEY_URL = "http://m.weibo.cn/searchs/searchTopicByKeyword?q={keyword}";
-	
+
 	/**
 	 * 获取当前登录用户的个人资料
 	 */
 	public static final String GET_ME_URL = "https://m.weibo.cn/home/me?format=cards";
-	
+
 }

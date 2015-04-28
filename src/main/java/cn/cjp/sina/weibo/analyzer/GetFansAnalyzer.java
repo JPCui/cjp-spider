@@ -11,6 +11,11 @@ import org.json.JSONObject;
 
 import cn.cjp.sina.weibo.domain.UserDomain;
 
+/**
+ * @deprecated use {@link ResponseJsonAnalyzer} instead
+ * @author REAL
+ *
+ */
 public class GetFansAnalyzer {
 	/**
 	 * Logger for this class
