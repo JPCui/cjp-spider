@@ -1,4 +1,4 @@
-package cn.cjp.spider.tencent.pengyou.demo;
+package cn.cjp.tencent.pengyou.demo;
 
 import java.io.IOException;
 

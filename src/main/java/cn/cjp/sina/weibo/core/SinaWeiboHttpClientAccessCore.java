@@ -100,9 +100,7 @@ public class SinaWeiboHttpClientAccessCore extends HttpClientCore{
 	 * @param cookies
 	 * @param uid
 	 * @param page
-	 * @return
-	 * @throws IOException
-	 * @throws ClientProtocolException
+	 * @return get FansList, size=0 if response is null while SocketException happening
 	 */
 	public synchronized List<UserDomain> requestFansByUid(String uid, int page) {
 
@@ -111,6 +109,9 @@ public class SinaWeiboHttpClientAccessCore extends HttpClientCore{
 		url = url.replace("{page}", page + "");
 
 		HttpResponse response = this.executeGet(url, null);
+		if(response == null){
+			return new ArrayList<UserDomain>();
+		}
 		HttpEntity entity = response.getEntity();
 		String json = null;
 		try {

@@ -1,4 +1,4 @@
-package cn.cjp.spider.sina.weibo;
+package cn.cjp.sina.weibo;
 
 import org.junit.Test;
 
@@ -17,7 +17,9 @@ public class GetFansSpiderTest {
 		fansSpider.setSavedFileDir("D:/_weibo_data_");
 		fansSpider.initWaitingUidList("5574133962");
 		
-		fansSpider.run();
+		for(int i=0; i<5; i++){
+			new Thread(fansSpider).start();
+		}
 		
 		
 	}

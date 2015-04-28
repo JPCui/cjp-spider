@@ -1,4 +1,4 @@
-package cn.cjp.spider.sina.weibo.demo;
+package cn.cjp.sina.weibo.demo;
 
 import java.io.IOException;
 

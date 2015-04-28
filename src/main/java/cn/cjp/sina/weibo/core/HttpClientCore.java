@@ -2,6 +2,7 @@ package cn.cjp.sina.weibo.core;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -130,7 +131,42 @@ public class HttpClientCore {
 
 		HttpResponse httpResponse = null;
 		try {
-			httpResponse = httpClient.execute(httpGet);
+			// 重新连接次数
+			int reConnectTimes = 3;
+			while(reConnectTimes-- != 0){
+				try {
+					httpResponse = httpClient.execute(httpGet);
+				} catch (SocketException e) {
+					if(e.getMessage().contains("Software caused connection abort")){
+						try {
+							Thread.sleep(3000);
+						} catch (InterruptedException e1) {
+						}
+						continue;
+					}
+				}
+				break;
+			}
+			// 如果重新连接3次不成功，休眠更长的时间进行重新连接
+			if(reConnectTimes == 0){
+				try {
+					Thread.sleep(30 * 1000);
+				} catch (InterruptedException e) {
+				}
+				try {
+					httpResponse = httpClient.execute(httpGet);
+				} catch (SocketException e) {
+					if(e.getMessage().contains("Software caused connection abort")){
+						try {
+							Thread.sleep(3000);
+						} catch (InterruptedException e1) {
+						}
+					}
+					logger.error("连接失败", e);
+					return null;
+				}
+				
+			}
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

@@ -1,4 +1,4 @@
-package cn.cjp.spider.sina.weibo.spider;
+package cn.cjp.sina.weibo.spider;
 
 import cn.cjp.sina.weibo.spider.GetFansSpider;
 

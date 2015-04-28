@@ -213,7 +213,7 @@ public class GetFansSpider implements Runnable {
 			data += fan.toString() + "\r\n";
 		}
 
-		FileUtil.write(data, savedFileDir + grabbingUid + ".fans", true);
+		FileUtil.write(data, savedFileDir+ "/" + grabbingUid + ".fans", true);
 	}
 
 }

@@ -1,4 +1,4 @@
-package cn.cjp.spider.demo;
+package cn.cjp.demo;
 
 import java.util.HashMap;
 import java.util.Map;

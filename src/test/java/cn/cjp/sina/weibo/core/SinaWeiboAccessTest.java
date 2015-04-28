@@ -1,4 +1,4 @@
-package cn.cjp.spider.sina.weibo.core;
+package cn.cjp.sina.weibo.core;
 
 import java.io.IOException;
 import java.util.Date;
