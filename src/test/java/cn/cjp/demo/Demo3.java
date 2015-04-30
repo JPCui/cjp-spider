@@ -6,10 +6,10 @@ import java.util.Map;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 
-import cn.cjp.sina.weibo.core.HttpClientCore;
 import cn.cjp.sina.weibo.domain.Const;
 import cn.cjp.sina.weibo.domain.LoginDomain;
 import cn.cjp.sina.weibo.domain.StatusPubWeibo;
+import cn.cjp.sina.weibo.http.core.HttpClientCore;
 
 public class Demo3 {
 

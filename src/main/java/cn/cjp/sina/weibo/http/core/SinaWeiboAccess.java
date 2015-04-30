@@ -1,4 +1,4 @@
-package cn.cjp.sina.weibo.core;
+package cn.cjp.sina.weibo.http.core;
 
 import java.io.BufferedReader;
 import java.io.File;

@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.apache.http.client.ClientProtocolException;
 import org.junit.Test;
 
-import cn.cjp.sina.weibo.core.HttpClientCore;
+import cn.cjp.sina.weibo.http.core.HttpClientCore;
 
 public class HttpProxyLoginDemo extends HttpClientCore{
 	

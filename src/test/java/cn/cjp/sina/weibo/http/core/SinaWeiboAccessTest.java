@@ -1,4 +1,4 @@
-package cn.cjp.sina.weibo.core;
+package cn.cjp.sina.weibo.http.core;
 
 import java.io.IOException;
 import java.util.Date;
@@ -14,9 +14,9 @@ import org.junit.Test;
 
 import cn.cjp.base.utils.CodeUtil;
 import cn.cjp.base.utils.JacksonUtil;
-import cn.cjp.sina.weibo.core.SinaWeiboAccess;
 import cn.cjp.sina.weibo.domain.HomeWeibo;
 import cn.cjp.sina.weibo.domain.LoginDomain;
+import cn.cjp.sina.weibo.http.core.SinaWeiboAccess;
 
 @SuppressWarnings("deprecation")
 public class SinaWeiboAccessTest {
