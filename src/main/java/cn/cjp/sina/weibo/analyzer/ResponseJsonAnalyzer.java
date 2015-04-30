@@ -87,7 +87,7 @@ public class ResponseJsonAnalyzer {
 			}
 
 		} catch (JSONException e) {
-			logger.error("JSON转换错误：" + json, e);
+			logger.warn("JSON转换错误：" + json, e);
 		}
 
 		return userDomains;

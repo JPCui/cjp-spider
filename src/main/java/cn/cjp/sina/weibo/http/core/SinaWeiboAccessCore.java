@@ -1,4 +1,4 @@
-package cn.cjp.sina.weibo.core;
+package cn.cjp.sina.weibo.http.core;
 
 import org.apache.log4j.Logger;
 

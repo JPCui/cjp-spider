@@ -1,4 +1,4 @@
-package cn.cjp.sina.weibo.core;
+package cn.cjp.sina.weibo.http.core;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -9,8 +9,8 @@ import org.apache.log4j.Logger;
 
 import cn.cjp.base.utils.FileUtil;
 import cn.cjp.sina.weibo.analyzer.GetFansAnalyzer;
-import cn.cjp.sina.weibo.core.SinaWeiboAccessCore;
 import cn.cjp.sina.weibo.domain.UserDomain;
+import cn.cjp.sina.weibo.http.core.SinaWeiboAccessCore;
 
 /**
  * 在线程中测试SinaWeiboAccessCore

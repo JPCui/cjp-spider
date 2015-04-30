@@ -3,18 +3,20 @@ package cn.cjp.sina.weibo.spider;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-import org.apache.http.HttpHost;
-import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.log4j.Logger;
 
 import cn.cjp.base.utils.FileUtil;
-import cn.cjp.sina.weibo.core.SinaWeiboHttpClientAccessCore;
 import cn.cjp.sina.weibo.domain.UserDomain;
-import cn.cjp.sina.weibo.proxy.bean.HttpProxyBean;
-import cn.cjp.sina.weibo.proxy.service.HttpProxyService;
+import cn.cjp.sina.weibo.http.core.SinaWeiboHttpClientAccessCore;
 
+/**
+ * 应该把登录账号也作为一个登录账号池
+ * @author REAL
+ *
+ */
 public class GetFansSpider implements Runnable {
 
 	/**
@@ -23,7 +25,7 @@ public class GetFansSpider implements Runnable {
 	private static final Logger logger = Logger.getLogger(GetFansSpider.class);
 
 	SinaWeiboHttpClientAccessCore accessCore = null;
-	private HttpHost httpHost = null;
+
 	/**
 	 * 已抓取的Uid队列
 	 */
@@ -45,41 +47,37 @@ public class GetFansSpider implements Runnable {
 	private static String savedFileDir = "";
 
 	/**
-	 * Instantiation DefaultSpider
+	 * Instantiation DefaultSpider <br>
+	 * 
+	 * @param accounts for logging on to sina weibo
 	 */
-	public GetFansSpider() {
+	public GetFansSpider(Map<String, String> accounts) {
+
+		accessCore = SinaWeiboHttpClientAccessCore.getInstance(accounts);
 	}
 
 	/**
-	 * Instantiation ProxySpider
-	 * @param httpProxyBean
-	 *            an object of {@link HttpProxyBean}
-	 */
-	public GetFansSpider(HttpProxyBean httpProxyBean) {
-		httpHost = new HttpHost(httpProxyBean.getHost(),
-				httpProxyBean.getPort());
-	}
-
-	/**
-	 * setting acount for logging on to sina weibo
+	 * Instantiation DefaultSpider <br>
 	 * 
 	 * @param username
+	 *            for logging on to sina weibo
 	 * @param password
+	 *            for logging on to sina weibo
+	 * @param saveDir
+	 *            设置存储路径，不设置则不存
 	 */
-	public void setAcount(String username, String password) {
+	public GetFansSpider(Map<String, String> accounts, String saveDir) {
 
-		accessCore = SinaWeiboHttpClientAccessCore.getInstance(username,
-				password);
-		// 登录成功，才可以加上代理进行后续操作
-		if (this.httpHost != null) {
-			HttpProxyBean proxyBean = HttpProxyService.getRandomProxy();
-			HttpHost httpHost = new HttpHost(proxyBean.getHost(),
-					proxyBean.getPort());
-			accessCore.httpClient.getParams().setParameter(
-					ConnRoutePNames.DEFAULT_PROXY, httpHost);
-			logger.info("setting proxy ：" + httpHost.getHostName() + ":"
-					+ httpHost.getPort());
-		}
+		savedFileDir = saveDir;
+		new GetFansSpider(accounts);
+	}
+
+	/**
+	 * @param saveDir
+	 *            设置存储路径，不设置则不存
+	 */
+	public void setSavedFileDir(String saveDir) {
+		savedFileDir = saveDir;
 	}
 
 	/**
@@ -102,16 +100,6 @@ public class GetFansSpider implements Runnable {
 		waitingUidList.addAll(uids);
 	}
 
-	/**
-	 * 设置存储路径，不设置则不存
-	 * 
-	 * @param dir
-	 */
-	@SuppressWarnings("static-access")
-	public void setSavedFileDir(String dir) {
-		this.savedFileDir = dir;
-	}
-
 	public void run() {
 		/**
 		 * 验证是否登录成功
@@ -121,9 +109,7 @@ public class GetFansSpider implements Runnable {
 					"Please call setAcount for login"));
 			return;
 		}
-		synchronized (logger) {
-			logger.info("Thread start...\n");
-		}
+		logger.info("Thread start...\n");
 
 		while (true) {
 			toGrab();
@@ -213,7 +199,7 @@ public class GetFansSpider implements Runnable {
 			data += fan.toString() + "\r\n";
 		}
 
-		FileUtil.write(data, savedFileDir+ "/" + grabbingUid + ".fans", true);
+		FileUtil.write(data, savedFileDir + "/" + grabbingUid + ".fans", true);
 	}
 
 }

@@ -1,6 +1,7 @@
-package cn.cjp.sina.weibo.core;
+package cn.cjp.sina.weibo.http.core;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,8 +9,12 @@ import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
@@ -18,6 +23,7 @@ import cn.cjp.sina.weibo.domain.Const;
 import cn.cjp.sina.weibo.domain.LoginDomain;
 import cn.cjp.sina.weibo.domain.StatusPubWeibo;
 import cn.cjp.sina.weibo.domain.UserDomain;
+import cn.cjp.sina.weibo.login.service.LoginCookieService;
 
 /**
  * 1. 纳入多线程的新浪微博爬虫<br>
@@ -26,7 +32,7 @@ import cn.cjp.sina.weibo.domain.UserDomain;
  * @author REAL
  * 
  */
-public class SinaWeiboHttpClientAccessCore extends HttpClientCore{
+public class SinaWeiboHttpClientAccessCore extends HttpClientCore {
 	/**
 	 * Logger for this class
 	 */
@@ -45,13 +51,14 @@ public class SinaWeiboHttpClientAccessCore extends HttpClientCore{
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
-	public static SinaWeiboHttpClientAccessCore getInstance(String username,
-			String password){
+	public static SinaWeiboHttpClientAccessCore getInstance(Map<String, String> accounts) {
 		SinaWeiboHttpClientAccessCore sinaWeiboAccessCore = new SinaWeiboHttpClientAccessCore();
-		boolean isLogined = sinaWeiboAccessCore.login(username, password);
-
-		if (!isLogined) {
-			return null;
+		boolean loginFlag = false;
+		for(String username : accounts.keySet()){
+			loginFlag = sinaWeiboAccessCore.login(username, accounts.get(username));
+			if(!loginFlag){
+				logger.error("账号（"+username+"）登录失败");
+			}
 		}
 		return sinaWeiboAccessCore;
 	}
@@ -61,12 +68,13 @@ public class SinaWeiboHttpClientAccessCore extends HttpClientCore{
 	 * 
 	 * @param data
 	 *            参数(username, password)
-	 * @return
+	 *            
+	 * @return true if login success，or false
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	private boolean login(String username, String password){
+	private boolean login(String username, String password) {
 		// set request params
 		Map<String, String> datas = new HashMap<String, String>();
 		datas.put("username", username);
@@ -74,13 +82,40 @@ public class SinaWeiboHttpClientAccessCore extends HttpClientCore{
 		datas.put("savestate", "1");
 		datas.put("ec", "0");
 		datas.put("entry", "mweibo");
-		
+
 		String json = null;
-		
+		HttpResponse httpResponse = null;
+
 		synchronized (httpClient) {
-			HttpResponse httpResponse = this.executePost(Const.LOGIN_URL, Const.HEADER_FOR_LOGIN, datas);
-			json = this.getText(httpResponse);
+			HttpPost httpPost = new HttpPost(Const.LOGIN_URL);
+			// 设置Header
+			if(Const.HEADER_FOR_LOGIN != null && Const.HEADER_FOR_LOGIN.size() != 0){
+				for(String key : Const.HEADER_FOR_LOGIN.keySet()){
+					httpPost.setHeader(key, Const.HEADER_FOR_LOGIN.get(key));
+				}
+			}
+			// 设置请求参数
+			if (datas != null) {
+				List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+				for (String key : datas.keySet()) {
+					pairs.add(new BasicNameValuePair(key, datas.get(key)));
+				}
+				try {
+					UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(
+							pairs);
+					httpPost.setEntity(formEntity);
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
+			}
+			// 执行请求
+			httpResponse = this.execute(httpPost);
+			// 保存cookie
+			LoginCookieService.saveLoginCookies(username,
+					this.httpClient.getCookieStore());
 		}
+
+		json = this.getText(httpResponse);
 
 		LoginDomain loginDomain = LoginDomain.fromJson(json);
 		if (null != loginDomain
@@ -100,7 +135,8 @@ public class SinaWeiboHttpClientAccessCore extends HttpClientCore{
 	 * @param cookies
 	 * @param uid
 	 * @param page
-	 * @return get FansList, size=0 if response is null while SocketException happening
+	 * @return get FansList, size=0 if response is null while SocketException
+	 *         happening
 	 */
 	public synchronized List<UserDomain> requestFansByUid(String uid, int page) {
 
@@ -108,8 +144,9 @@ public class SinaWeiboHttpClientAccessCore extends HttpClientCore{
 		url = url.replace("{uid}", uid);
 		url = url.replace("{page}", page + "");
 
-		HttpResponse response = this.executeGet(url, null);
-		if(response == null){
+		HttpResponse response = this.executeGet(url,
+				LoginCookieService.getRandomLoginCookieMap());
+		if (response == null) {
 			return new ArrayList<UserDomain>();
 		}
 		HttpEntity entity = response.getEntity();
@@ -139,14 +176,15 @@ public class SinaWeiboHttpClientAccessCore extends HttpClientCore{
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
-	public synchronized List<UserDomain> requestFollowsByUid(String uid, int page)
-			throws ClientProtocolException, IOException {
+	public synchronized List<UserDomain> requestFollowsByUid(String uid,
+			int page) throws ClientProtocolException, IOException {
 
 		String url = Const.FOLLOWERS_URL;
 		url = url.replace("{uid}", uid);
 		url = url.replace("{page}", page + "");
 
-		HttpResponse response = this.executeGet(url, null);
+		HttpResponse response = this.executeGet(url, 
+				LoginCookieService.getRandomLoginCookieMap());
 		HttpEntity entity = response.getEntity();
 		String json = EntityUtils.toString(entity, "UTF-8");
 
@@ -173,7 +211,8 @@ public class SinaWeiboHttpClientAccessCore extends HttpClientCore{
 	public synchronized StatusPubWeibo pubWeibo(Map<String, String> datas) {
 		String url = Const.B_PUB_WEIBO;
 		// set http-header
-		HttpResponse httpResponse = this.executePost(url, null, datas);
+		HttpResponse httpResponse = this.executePost(url, 
+				LoginCookieService.getRandomLoginCookieMap(), datas);
 		HttpEntity entity = httpResponse.getEntity();
 		String json = "";
 		try {

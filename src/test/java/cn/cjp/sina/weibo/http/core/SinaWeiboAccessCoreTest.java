@@ -1,4 +1,4 @@
-package cn.cjp.sina.weibo.core;
+package cn.cjp.sina.weibo.http.core;
 
 import java.io.IOException;
 import java.util.List;
@@ -9,8 +9,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cn.cjp.sina.weibo.analyzer.GetFansAnalyzer;
-import cn.cjp.sina.weibo.core.SinaWeiboAccessCore;
 import cn.cjp.sina.weibo.domain.UserDomain;
+import cn.cjp.sina.weibo.http.core.SinaWeiboAccessCore;
 
 @SuppressWarnings("deprecation")
 public class SinaWeiboAccessCoreTest {

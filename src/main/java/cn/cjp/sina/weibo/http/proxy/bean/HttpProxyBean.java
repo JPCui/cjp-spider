@@ -1,4 +1,4 @@
-package cn.cjp.sina.weibo.proxy.bean;
+package cn.cjp.sina.weibo.http.proxy.bean;
 
 /**
  * http代理实体
