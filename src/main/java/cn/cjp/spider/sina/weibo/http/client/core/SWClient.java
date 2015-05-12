@@ -37,7 +37,7 @@ import org.apache.log4j.Logger;
 import cn.cjp.spider.sina.weibo.domain.Const;
 import cn.cjp.spider.sina.weibo.http.proxy.bean.HttpProxyBean;
 import cn.cjp.spider.sina.weibo.http.proxy.service.HttpProxyService;
-import cn.cjp.spider.utils.SynchUtils;
+import cn.cjp.utils.SynchUtils;
 
 /**
  * 新浪微博HttpClient<br>

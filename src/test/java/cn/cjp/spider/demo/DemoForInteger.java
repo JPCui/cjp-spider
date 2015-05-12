@@ -18,8 +18,6 @@ public class DemoForInteger extends Thread {
 
 	public DemoForInteger(Integer count) {
 		DemoForInteger.count = count;
-		System.out.println(count.hashCode());
-		System.out.println(count.hashCode());
 	}
 
 	public void run() {

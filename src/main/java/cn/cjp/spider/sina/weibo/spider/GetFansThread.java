@@ -6,28 +6,26 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import cn.cjp.spider.utils.SynchUtils;
+import cn.cjp.utils.SynchUtils;
 
 public class GetFansThread extends Thread{
 	private static final Logger logger = Logger
 			.getLogger(GetFansThread.class);
 
-	Map<Integer, Thread> threadMap = new HashMap<Integer, Thread>();
+	private static Map<Integer, Thread> threadMap = new HashMap<Integer, Thread>();
+
 	GetFansSpider spider = null;
 
 	public GetFansThread(Map<String, String> accounts, String saveDir, List<String> waitingUidList){
-
 		spider = new GetFansSpider(accounts);
 		spider.setSavedFileDir(saveDir);
 		spider.initWaitingUidList(waitingUidList);
-		
 	}
+	
 	public GetFansThread(Map<String, String> accounts, String saveDir, String waitingUid){
-
 		spider = new GetFansSpider(accounts);
 		spider.setSavedFileDir(saveDir);
 		spider.initWaitingUidList(waitingUid);
-		
 	}
 	
 	public Thread getOneThread(String name){
@@ -81,5 +79,17 @@ public class GetFansThread extends Thread{
 			}
 		}).start();
 	}
-	
+
+	public static Map<Integer, Thread> getThreadMap() {
+		return threadMap;
+	}
+	public static void setThreadMap(Map<Integer, Thread> threadMap) {
+		GetFansThread.threadMap = threadMap;
+	}
+	public GetFansSpider getSpider() {
+		return spider;
+	}
+	public void setSpider(GetFansSpider spider) {
+		this.spider = spider;
+	}
 }

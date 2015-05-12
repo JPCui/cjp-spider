@@ -21,27 +21,25 @@
 		<jdk.tools.version>1.6</jdk.tools.version>
 		<httpclient.version>4.2.3</httpclient.version>
 
+		<hibernate.jpa.version>1.0.1.Final</hibernate.jpa.version>
+		<hibernate.entitymanager.version>4.3.4.Final</hibernate.entitymanager.version>
+
 		<spring.version>3.2.9.RELEASE</spring.version>
-
 		<spring.data.jpa.version>1.6.0.RELEASE</spring.data.jpa.version>
-
 		<solr.version>4.7.0</solr.version>
 		<spring.data.solr.version>1.2.0.RELEASE</spring.data.solr.version>
-
 		<spring.data.mongodb.version>1.5.0.RELEASE</spring.data.mongodb.version>
+		<neo4j.version>2.0.3</neo4j.version>
+		<spring.data.neo4j.version>3.1.0.RELEASE</spring.data.neo4j.version>
+
 	</properties>
 
 	<dependencies>
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-			<version>4.0.1.RELEASE</version>
+			<groupId>cn.cjp</groupId>
+			<artifactId>cjp-base</artifactId>
+			<version>${project.version}</version>
 		</dependency>
-	    <dependency>
-	        <groupId>cn.cjp</groupId>
-	        <artifactId>cjp-base</artifactId>
-	        <version>${project.version}</version>
-	    </dependency>
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
@@ -53,13 +51,6 @@
 			<version>1.2</version>
 		</dependency>
 
-		<dependency>
-			<groupId>jdk.tools</groupId>
-			<artifactId>jdk.tools</artifactId>
-			<version>${jdk.tools.version}</version>
-			<scope>system</scope>
-			<systemPath>${JAVA_HOME}/lib/tools.jar</systemPath>
-		</dependency>
 		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib-nodep</artifactId>
@@ -76,24 +67,9 @@
 			<version>1.7.3</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>net.sf.ezmorph</groupId>
 			<artifactId>ezmorph</artifactId>
 			<version>1.0.6</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-beanutils</groupId>
-			<artifactId>commons-beanutils-core</artifactId>
-			<version>1.8.3</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>1.1.3</version>
 		</dependency>
 
 		<dependency>
@@ -143,6 +119,101 @@
 			<artifactId>spring-data-redis</artifactId>
 			<version>1.5.0.RELEASE</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-mongodb</artifactId>
+			<version>${spring.data.mongodb.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-neo4j-rest</artifactId>
+			<version>${spring.data.neo4j.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>neo4j-cypher-compiler-1.9</artifactId>
+					<groupId>org.neo4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-neo4j</artifactId>
+			<version>${spring.data.neo4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-neo4j-tx</artifactId>
+			<version>${spring.data.neo4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-kernel</artifactId>
+			<version>${neo4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.solr</groupId>
+			<artifactId>solr-solrj</artifactId>
+			<version>${solr.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.solr</groupId>
+			<artifactId>solr-core</artifactId>
+			<version>${solr.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-solr</artifactId>
+			<version>${spring.data.solr.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-jpa</artifactId>
+			<version>${spring.data.jpa.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>${hibernate.entitymanager.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>4.3.1.Final</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>4.0.2.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-oxm</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j</artifactId>
+			<version>2.0.3</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

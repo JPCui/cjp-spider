@@ -23,4 +23,13 @@ public interface ThreadDao {
 	 * @param threadId
 	 */
 	void delete(String threadId);
+	
+	/**
+	 * 
+	 * @param thread
+	 * @return 队列大小
+	 */
+	public long lpush(ThreadDomain thread);
+	
+	public ThreadDomain lpop();
 }

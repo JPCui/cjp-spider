@@ -10,7 +10,7 @@ import org.apache.commons.lang.math.RandomUtils;
 import org.apache.log4j.Logger;
 
 import cn.cjp.spider.sina.weibo.http.proxy.bean.HttpProxyBean;
-import cn.cjp.spider.utils.PropertiesUtils;
+import cn.cjp.utils.PropertiesUtils;
 
 /**
  * Http代理服务业务类

@@ -1,4 +1,4 @@
-package cn.cjp.spider.utils;
+package cn.cjp.utils;
 
 import java.util.Calendar;
 import java.util.Date;

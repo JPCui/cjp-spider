@@ -1,4 +1,4 @@
-package cn.cjp.spider.utils;
+package cn.cjp.utils;
 
 /**
  * 键值对数组

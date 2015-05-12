@@ -29,13 +29,24 @@ public class ThreadDaoImpl implements ThreadDao {
 			public Object doInRedis(RedisConnection connection)
 					throws DataAccessException {
 				connection.set(
-						redisTemplate
-						.getStringSerializer().serialize("thread.id." + thread.getId()),
+						redisTemplate.getStringSerializer().serialize(
+								"thread.id." + thread.getId()),
 						redisTemplate.getStringSerializer().serialize(
 								JacksonUtil.toJson(thread)));
 				return null;
 			}
 		});
+	}
+
+	public long lpush(ThreadDomain thread) {
+		return redisTemplate.opsForList().leftPush(
+				ThreadDomain.class.getSimpleName(), JacksonUtil.toJson(thread));
+	}
+
+	public ThreadDomain lpop() {
+		String json = redisTemplate.opsForList().leftPop(
+				ThreadDomain.class.getSimpleName()).toString();
+		return JacksonUtil.toObj(json, ThreadDomain.class);
 	}
 
 	/*
@@ -52,7 +63,8 @@ public class ThreadDaoImpl implements ThreadDao {
 					byte[] value = connection.get(key);
 					String json = redisTemplate.getStringSerializer()
 							.deserialize(value);
-					ThreadDomain threadDomain = JacksonUtil.toObj(json, ThreadDomain.class);
+					ThreadDomain threadDomain = JacksonUtil.toObj(json,
+							ThreadDomain.class);
 					return threadDomain;
 				}
 				return null;

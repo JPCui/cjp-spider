@@ -23,7 +23,7 @@ import cn.cjp.spider.sina.weibo.domain.StatusPubWeibo;
 import cn.cjp.spider.sina.weibo.domain.UserDomain;
 import cn.cjp.spider.sina.weibo.http.client.core.SWClient;
 import cn.cjp.spider.sina.weibo.login.service.LoginCookieService;
-import cn.cjp.spider.utils.SynchUtils;
+import cn.cjp.utils.SynchUtils;
 
 /**
  * 1. 纳入多线程的新浪微博爬虫<br>

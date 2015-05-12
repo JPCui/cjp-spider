@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import cn.cjp.base.utils.JacksonUtil;
 import cn.cjp.redis.domain.ThreadDomain;
+import cn.cjp.spider.chinanews.news.spider.ChinanewsSpider;
 
 
 /**
@@ -16,11 +18,13 @@ import cn.cjp.redis.domain.ThreadDomain;
  * @since 1.0
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:/spring-redis.xml")
+@ContextConfiguration({"classpath:/spring-redis.xml","classpath:/spring-solr.xml","classpath:/spring-beans.xml"})
 public class ThreadDaoTest {
 	
 	@Autowired
 	ThreadDao threadDao;
+	@Autowired
+	ChinanewsSpider chinanewsSpider;
 	
 	@Test
 	public void testSave(){
@@ -34,7 +38,24 @@ public class ThreadDaoTest {
 		ThreadDomain threadDomainFromDB = threadDao.read("123456");
 		
 		Assert.assertEquals(threadDomain.getName(), threadDomainFromDB.getName());
+	}
+	
+	@Test
+	public void testListOps(){
+		ThreadDomain threadDomain = new ThreadDomain();
+		threadDomain.setId("1");
+		threadDomain.setName("thread-1");
 		
+		long l = threadDao.lpush(threadDomain);
+		System.out.println(l);
+		
+		l = threadDao.lpush(threadDomain);
+		System.out.println(l);
+		
+		ThreadDomain threadDomain2 = threadDao.lpop();
+		
+		System.out.println(JacksonUtil.toJson(threadDomain2));
+		System.out.println(ThreadDomain.class.getSimpleName());
 		
 	}
 	

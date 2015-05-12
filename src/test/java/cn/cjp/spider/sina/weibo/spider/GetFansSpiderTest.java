@@ -9,7 +9,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import cn.cjp.spider.sina.weibo.spider.GetFansSpider;
-import cn.cjp.spider.utils.SynchUtils;
+import cn.cjp.utils.SynchUtils;
 
 public class GetFansSpiderTest {
 	private static final Logger logger = Logger
