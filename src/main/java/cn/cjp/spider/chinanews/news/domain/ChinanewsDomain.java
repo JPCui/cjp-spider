@@ -31,6 +31,7 @@ public class ChinanewsDomain extends SolrNewsDomain{
 	// 作者
 	@Field(SolrSearchAble.AUTHOR)
 	private String author;
+	
 	// 标题
 	@Field(SolrSearchAble.TITLE)
 	private String title;
@@ -38,6 +39,10 @@ public class ChinanewsDomain extends SolrNewsDomain{
 	// 新闻内容
 	@Field(SolrSearchAble.CONTENT)
 	private String content;
+
+	// 原格式新闻内容
+	@Field(SolrSearchAble.PRE_CONTENT)
+	private String preContent;
 	
 	// 新闻内容
 	@Field(SolrSearchAble.SUMMARY)

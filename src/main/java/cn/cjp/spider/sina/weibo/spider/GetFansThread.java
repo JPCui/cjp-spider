@@ -15,20 +15,41 @@ public class GetFansThread extends Thread{
 	private static Map<Integer, Thread> threadMap = new HashMap<Integer, Thread>();
 
 	GetFansSpider spider = null;
+	private int threadNum = 3;
 
+	/**
+	 * 
+	 * @param accounts 微博登录账号
+	 * @param saveDir 物理保存路径
+	 * @param waitingUidList 等待抓取的用户ID队列
+	 */
 	public GetFansThread(Map<String, String> accounts, String saveDir, List<String> waitingUidList){
 		spider = new GetFansSpider(accounts);
 		spider.setSavedFileDir(saveDir);
 		spider.initWaitingUidList(waitingUidList);
 	}
 	
+	/**
+	 * 
+	 * @param accounts 微博登录账号
+	 * @param saveDir 物理保存路径
+	 * @param waitingUidList 等待抓取的用户ID
+	 */
 	public GetFansThread(Map<String, String> accounts, String saveDir, String waitingUid){
 		spider = new GetFansSpider(accounts);
 		spider.setSavedFileDir(saveDir);
 		spider.initWaitingUidList(waitingUid);
 	}
 	
-	public Thread getOneThread(String name){
+	/**
+	 * 线程数，默认为3
+	 * @param threadNum 线程数
+	 */
+	public void setThreadNum(int threadNum){
+		this.threadNum = threadNum;
+	}
+	
+	private Thread getOneThread(String name){
 
 		Thread thread = new Thread(spider);
 		thread.setName(name);
@@ -41,8 +62,8 @@ public class GetFansThread extends Thread{
 	}
 	
 	public void run(){
-		for (int i = 0; i < 3; i++) {
-			Thread thread = this.getOneThread("thread-"+i);
+		for (int i = 0; i < threadNum; i++) {
+			Thread thread = this.getOneThread("get-fans-thread-"+i);
 			threadMap.put(i, thread);
 			thread.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 				public void uncaughtException(Thread t, Throwable e) {
@@ -91,5 +112,13 @@ public class GetFansThread extends Thread{
 	}
 	public void setSpider(GetFansSpider spider) {
 		this.spider = spider;
+	}
+
+	public static Logger getLogger() {
+		return logger;
+	}
+
+	public int getThreadNum() {
+		return threadNum;
 	}
 }

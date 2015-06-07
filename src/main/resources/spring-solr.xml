@@ -48,12 +48,6 @@
 		class="cn.cjp.spider.chinanews.news.repo.impl.ChinanewsRepoImpl">
 		<property name="solrOperations" ref="solrTemplate" />
 	</bean>
-	
-	<!-- Repo Autowired to Spider-->
-	<!-- ChinaNews Spider -->
-    <bean class="cn.cjp.spider.chinanews.news.spider.ChinanewsSpider">
-        <property name="chinanewsRepo" ref="chinanewsRepo"></property>
-    </bean>
     
 	<!-- 将Repository装配到Service
 	<context:component-scan base-package="cn.cjp.spider.*.*.spider.*" />
