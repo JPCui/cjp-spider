@@ -9,7 +9,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import cn.cjp.base.utils.JacksonUtil;
 import cn.cjp.redis.domain.ThreadDomain;
-import cn.cjp.spider.chinanews.news.spider.ChinanewsSpider;
+import cn.cjp.spider.chinanews.news.spider.ChinanewsThread;
 
 
 /**
@@ -24,7 +24,7 @@ public class ThreadDaoTest {
 	@Autowired
 	ThreadDao threadDao;
 	@Autowired
-	ChinanewsSpider chinanewsSpider;
+	ChinanewsThread chinanewsSpider;
 	
 	@Test
 	public void testSave(){

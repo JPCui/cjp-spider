@@ -2,6 +2,11 @@ package cn.cjp.spider.common.redis;
 
 import java.util.List;
 
+/**
+ * redis操作
+ * @author REAL
+ *
+ */
 public interface RedisListOps {
 
 	/**

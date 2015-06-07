@@ -1,5 +1,10 @@
 package cn.cjp.redis.domain;
 
+/**
+ * 线程实体类
+ * @author REAL
+ *
+ */
 public class ThreadDomain {
 	
 	private String id;

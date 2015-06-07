@@ -58,6 +58,7 @@ public class SolrSearchAble {
 	 */
 	public static final String AUTHOR = "author";
 	public static final String CONTENT = "content";
+	public static final String PRE_CONTENT = "pre_content";
 	public static final String SUMMARY = "summary";
 	public static final String KEY_WORDS = "key_words";
 	public static final String CONTENT_SENTENCES = "content_sentences";
