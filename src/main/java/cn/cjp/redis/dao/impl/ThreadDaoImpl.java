@@ -9,9 +9,9 @@ import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
-import cn.cjp.base.utils.JacksonUtil;
 import cn.cjp.redis.dao.ThreadDao;
 import cn.cjp.redis.domain.ThreadDomain;
+import cn.cjp.utils.JacksonUtil;
 
 /**
  * 

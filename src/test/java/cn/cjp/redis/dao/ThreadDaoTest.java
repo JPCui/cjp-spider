@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import cn.cjp.base.utils.JacksonUtil;
+import cn.cjp.chinanews.news.spider.ChinanewsThread;
 import cn.cjp.redis.domain.ThreadDomain;
-import cn.cjp.spider.chinanews.news.spider.ChinanewsThread;
+import cn.cjp.utils.JacksonUtil;
 
 
 /**

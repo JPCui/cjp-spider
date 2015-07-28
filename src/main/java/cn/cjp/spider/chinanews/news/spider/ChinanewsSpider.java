@@ -7,20 +7,22 @@ import java.util.concurrent.Executors;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import cn.cjp.spider.common.spider.BaseSpider;
+import cn.cjp.common.spider.BaseSpider;
 
 /**
  * 中国新闻网爬虫
+<<<<<<< HEAD
  * 
+=======
+>>>>>>> branch 'master' of https://github.com/JPCui/cjp-spider.git
  * @author REAL
- * 
+ *
  */
-public class ChinanewsSpider extends BaseSpider {
+public class ChinanewsSpider extends BaseSpider{
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger
-			.getLogger(ChinanewsSpider.class);
+	private static final Logger logger = Logger.getLogger(ChinanewsSpider.class);
 
 	@Autowired
 	private Thread chinanewsThread;

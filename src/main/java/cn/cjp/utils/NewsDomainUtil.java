@@ -7,7 +7,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import cn.cjp.spider.chinanews.news.domain.ChinanewsDomain;
+import cn.cjp.chinanews.news.domain.ChinanewsDomain;
 
 public class NewsDomainUtil {
 

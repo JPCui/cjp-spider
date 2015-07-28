@@ -19,22 +19,39 @@
 		<cglib.version>2.2.2</cglib.version>
 		<validation.api.version>1.1.0.Final</validation.api.version>
 		<jdk.tools.version>1.6</jdk.tools.version>
-		<httpclient.version>4.2.3</httpclient.version>
+		<httpclient.version>4.3.1</httpclient.version>
+		<javax.persistence.version>1.0.2</javax.persistence.version>
 
-		<hibernate.jpa.version>1.0.1.Final</hibernate.jpa.version>
-		<hibernate.entitymanager.version>4.3.4.Final</hibernate.entitymanager.version>
+		<hibernate.version>3.3.1.GA</hibernate.version>
+		<commons-dbcp.version>1.4</commons-dbcp.version>
 
-		<spring.version>3.2.9.RELEASE</spring.version>
+		<spring.version>3.2.0.RELEASE</spring.version>
 		<spring.data.jpa.version>1.6.0.RELEASE</spring.data.jpa.version>
 		<solr.version>4.7.0</solr.version>
 		<spring.data.solr.version>1.2.0.RELEASE</spring.data.solr.version>
 		<spring.data.mongodb.version>1.5.0.RELEASE</spring.data.mongodb.version>
 		<neo4j.version>2.0.3</neo4j.version>
 		<spring.data.neo4j.version>3.1.0.RELEASE</spring.data.neo4j.version>
+		<validation-api>1.1.0.Final</validation-api>
 
 	</properties>
 
 	<dependencies>
+	<dependency>
+		<groupId>javax.validation</groupId>
+		<artifactId>validation-api</artifactId>
+		<version>${validation.api.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>javax.persistence</groupId>
+		<artifactId>persistence-api</artifactId>
+		<version>${javax.persistence.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>commons-dbcp</groupId>
+		<artifactId>commons-dbcp</artifactId>
+		<version>${commons-dbcp.version}</version>
+	</dependency>
 		<dependency>
 			<groupId>cn.cjp</groupId>
 			<artifactId>cjp-base</artifactId>
@@ -173,17 +190,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager</artifactId>
-			<version>${hibernate.entitymanager.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<version>4.3.1.Final</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 			<version>${spring.version}</version>
@@ -212,6 +218,29 @@
 			<groupId>org.neo4j</groupId>
 			<artifactId>neo4j</artifactId>
 			<version>2.0.3</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.22</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.9.0.GA</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-annotations</artifactId>
+			<version>${hibernate.version}</version>
 		</dependency>
 
 	</dependencies>

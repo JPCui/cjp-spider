@@ -13,10 +13,10 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import cn.cjp.base.utils.JacksonUtil;
-import cn.cjp.spider.chinanews.news.analyzer.HtmlAnalyzer;
-import cn.cjp.spider.chinanews.news.domain.ChinanewsDomain;
-import cn.cjp.spider.chinanews.news.repo.ChinanewsRepo;
-import cn.cjp.spider.common.redis.RedisListOps;
+import cn.cjp.chinanews.news.analyzer.HtmlAnalyzer;
+import cn.cjp.chinanews.news.domain.ChinanewsDomain;
+import cn.cjp.chinanews.news.repo.ChinanewsRepo;
+import cn.cjp.common.redis.RedisListOps;
 import cn.cjp.utils.NewsDomainUtil;
 import cn.cjp.utils.URLUtils;
 
