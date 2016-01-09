@@ -1,3 +1,5 @@
-target/*
-logs/*
+*
+!src
+!pom.xml
+!readme.md
 
