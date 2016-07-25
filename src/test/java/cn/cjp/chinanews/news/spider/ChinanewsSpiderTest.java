@@ -25,7 +25,7 @@ public class ChinanewsSpiderTest {
 	@SuppressWarnings("resource")
 	public static void main(String[] args) {
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(
-				"classpath:/spring-solr.xml", "classpath:/spring-redis.xml",
+				"classpath:/spider/spring.xml", "classpath:/spring-redis.xml",
 				"classpath:/spring-beans.xml");
 		
 		ChinanewsSpider chinanewsSpider = context.getBean("chinanewsSpider", ChinanewsSpider.class);

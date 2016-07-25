@@ -1,8 +1,8 @@
 package cn.cjp.chinanews.news.domain;
 
+import javax.persistence.Id;
+
 import org.apache.solr.client.solrj.beans.Field;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.solr.core.mapping.Indexed;
 
 import cn.cjp.common.constant.SolrSearchAble;
 import cn.cjp.common.domain.SolrNewsDomain;
@@ -22,7 +22,6 @@ public class ChinanewsDomain extends SolrNewsDomain{
 	// 新闻url
 	@Id
 	@Field(SolrSearchAble.ID)
-	@Indexed(SolrSearchAble.ID)
 	private String id;
 	
 	@Field(SolrSearchAble.URL)

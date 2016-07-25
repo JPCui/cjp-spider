@@ -27,6 +27,7 @@ public class HtmlAnalyzer {
 			return null;
 		
 		ChinanewsDomain news = new ChinanewsDomain();
+		news.setUrl(doc.location());
 
 		Element ele_id_1 = doc.getElementById("cont_1_1_2")
 				.getElementsByTag("h1").get(0);

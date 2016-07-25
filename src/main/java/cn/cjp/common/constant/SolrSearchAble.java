@@ -89,40 +89,5 @@ public class SolrSearchAble {
 	
 	public static final String COUNT = "count";
 	
-	//TOPIC
-
-	public static final String TOPIC_ID = ID;
-	public static final String TOPIC_CONTENT = "topicContent";
-	public static final String TOPIC_GRADE = "topicGrade";
-	public static final String TOPIC_CLASS = "topicClass";
-	public static final String TOPIC_SET_TIME = "topicSetTime";
-
-	public static final String NEWS_TOPIC_IDS = "newsTopicId";
-	public static final String NEWS_TOPIC_WEIGHTS = "newsTopicWeights";
-	
-	//Weibo
-	public static final String WEIBO_UID = "weiboUid";
-	public static final String WEIBO_COMMENT_NUM = "weiboCommentNum";
-	public static final String WEIBO_FORWARD_NUM = "weiboForwardNum";
-	public static final String WEIBO_LIKE_NUM = "weiboLikeNum";
-	public static final String WEIBO_FOWARD = "weiboForword";
-	
-	public static final String WEIBO_OWEIBO_UNAME = "oWeiboUname";
-	public static final String WEIBO_OWEIBO_UID = "oWeiboUid";
-	public static final String WEIBO_OWEIBOID = "oWeiboId";
-	
-	public static final String WEIBO_TIME = "weiboTime";
-	public static final String WEIBO_DEV = "weiboDev";
-	public static final String WEIBO_CONTEXT_LINK = "weiboContextLink";
-	public static final String WEIBO_CONTEXT = "weiboContext";
-	public static final String WEIBO_CONTEXT_HREF = "weiboHref";
-	
-	// WEIBO TOPIC
-	public static final String WEIBO_ID_FK = "weiboId_FK";
-
-	public static final String WEIBO_TOPIC_IDS = "weiboTopicId";
-	public static final String WEIBO_TOPIC_WEIGHTS = "weiboTopicWeights";
-	
-	
 	
 }

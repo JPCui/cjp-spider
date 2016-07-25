@@ -3,14 +3,17 @@
  */
 package cn.cjp.sina.weibo.http.proxy.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.math.RandomUtils;
 import org.apache.log4j.Logger;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import cn.cjp.sina.weibo.http.proxy.bean.HttpProxyBean;
-import cn.cjp.utils.PropertiesUtils;
 
 /**
  * Http代理服务业务类
@@ -22,53 +25,35 @@ public class HttpProxyService {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger
-			.getLogger(HttpProxyService.class);
+	private static final Logger logger = Logger.getLogger(HttpProxyService.class);
 
-	static PropertiesUtils propsUtils;
-	public static int proxyNum;
-
-	static {
-		propsUtils = new PropertiesUtils("http-proxy.properties");
-		proxyNum = Integer.parseInt(propsUtils.getPropValue("proxy.num"));
-	}
-	
 	/**
 	 * 获取所有的代理
+	 * 
 	 * @return
+	 * @throws IOException
 	 */
-	public static List<HttpProxyBean> getAll(){
+	public static List<HttpProxyBean> getAll() throws IOException {
+		Document doc = Jsoup.connect("http://www.proxy360.cn/default.aspx").ignoreContentType(true).get();
+		Element projectListDiv = doc.getElementById("ctl00_ContentPlaceHolder1_upProjectList");
+
+		Elements items = projectListDiv.getElementsByClass("proxylistitem");
+
 		List<HttpProxyBean> proxyBeans = new ArrayList<HttpProxyBean>();
-		for(int i=1; i<=proxyNum; i++){
-			String host = propsUtils.getPropValue("host" + i);
-			int port = Integer.parseInt(propsUtils
-					.getPropValue("port" + i));
+		for (int i = 0; i < items.size(); i++) {
+			Element item = items.get(i);
+			Elements itemProps = item.getElementsByClass("tbBottomLine");
+			String host = itemProps.get(0).text().trim();
+			int port = Integer.parseInt(itemProps.get(1).text().trim());
 			proxyBeans.add(new HttpProxyBean(host, port));
 		}
 		return proxyBeans;
 	}
 
-	/**
-	 * 随机获取一条代理
-	 * 
-	 * @return
-	 */
-	public static HttpProxyBean getRandomProxy() {
-		if (proxyNum == 0) {
-			return null;
-		}
-
-		int random = RandomUtils.nextInt(proxyNum) + 1;
-		try {
-			String host = propsUtils.getPropValue("host" + random);
-			int port = Integer.parseInt(propsUtils
-					.getPropValue("port" + random));
-			return new HttpProxyBean(host, port);
-		} catch (Exception e) {
-			logger.error("获取代理错误(" + random + ")[proxyNum: " + proxyNum + "]",
-					e);
-		}
-		return null;
+	public static void main(String[] args) throws IOException {
+		List<HttpProxyBean> list = getAll();
+		logger.info(list);
+		logger.info(list.size());
 	}
 
 }

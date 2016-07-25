@@ -55,6 +55,8 @@ public class SWClient {
 
 	/**
 	 * 初始化HttpClient
+	 * 
+	 * @throws IOException
 	 */
 	public SWClient() {
 		// // 初始化连接池
@@ -71,34 +73,34 @@ public class SWClient {
 	private void initHttpClient() {
 		httpClient = this.structHttpClient();
 		// 重新请求次数
-		httpClient
-				.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(
-						3, true));
+		httpClient.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(3, true));
 	}
 
 	/**
 	 * 初始化代理池
+	 * 
+	 * @throws IOException
 	 */
 	private void initProxyHttpClientPool() {
 		proxyHttpClients = new ArrayList<DefaultHttpClient>();
 		// 获取所有代理服务
-		List<HttpProxyBean> proxyBeans = HttpProxyService.getAll();
+		List<HttpProxyBean> proxyBeans = null;
+		try {
+			proxyBeans = HttpProxyService.getAll();
+		} catch (IOException e) {
+			logger.error(e);
+		}
 		// 实例化所有代理Http客户端
 		for (int i = 0; i < proxyBeans.size(); i++) {
 			HttpProxyBean proxyBean = proxyBeans.get(i);
-			HttpHost httpHost = new HttpHost(proxyBean.getHost(),
-					proxyBean.getPort());
+			HttpHost httpHost = new HttpHost(proxyBean.getHost(), proxyBean.getPort());
 
 			DefaultHttpClient proxyHttpClient = this.structHttpClient();
 			// 重新请求次数
-			proxyHttpClient
-					.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(
-							3, true));
-			proxyHttpClient.getParams().setParameter(
-					ConnRoutePNames.DEFAULT_PROXY, httpHost);
+			proxyHttpClient.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(3, true));
+			proxyHttpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, httpHost);
 			proxyHttpClients.add(proxyHttpClient);
-			logger.error("proxy setted ：" + httpHost.getHostName() + ":"
-					+ httpHost.getPort());
+			logger.error("proxy setted ：" + httpHost.getHostName() + ":" + httpHost.getPort());
 		}
 	}
 
@@ -110,18 +112,14 @@ public class SWClient {
 	private DefaultHttpClient structHttpClient() {
 		// 设置访问协议
 		SchemeRegistry schreg = new SchemeRegistry();
-		schreg.register(new Scheme("http", 80, PlainSocketFactory
-				.getSocketFactory()));
-		schreg.register(new Scheme("https", 443, SSLSocketFactory
-				.getSocketFactory()));
+		schreg.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
+		schreg.register(new Scheme("https", 443, SSLSocketFactory.getSocketFactory()));
 
 		// 构造一个支持多线程的DefaultHttpClient
 		DefaultHttpClient httpClient = new DefaultHttpClient(
 				new PoolingClientConnectionManager(schreg, 30, TimeUnit.SECONDS));
 		// 重新请求次数
-		httpClient
-				.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(
-						3, true));
+		httpClient.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(3, true));
 
 		return httpClient;
 	}
@@ -145,8 +143,7 @@ public class SWClient {
 	 * @param datas
 	 * @return
 	 */
-	public String executePost(String url, Map<String, String> headers,
-			Map<String, String> datas) {
+	public String executePost(String url, Map<String, String> headers, Map<String, String> datas) {
 
 		HttpPost httpPost = new HttpPost(url);
 		// header setting
@@ -166,8 +163,7 @@ public class SWClient {
 				pairs.add(new BasicNameValuePair(key, datas.get(key)));
 			}
 			try {
-				UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(
-						pairs);
+				UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(pairs);
 				httpPost.setEntity(formEntity);
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
@@ -178,7 +174,7 @@ public class SWClient {
 		String text = null;
 		// 网络异常TruncatedChunkException，重新请求
 		while (retryTimes-- != 0) {
-			HttpResponse httpResponse = this.executeByProxy(httpPost);
+			HttpResponse httpResponse = this.execute(httpPost, false);
 			if (null == httpResponse) {
 				continue;
 			}
@@ -217,7 +213,7 @@ public class SWClient {
 			}
 		}
 
-		HttpResponse httpResponse = this.executeByProxy(httpGet);
+		HttpResponse httpResponse = this.execute(httpGet, false);
 		if (null == httpResponse) {
 			return null;
 		}
@@ -271,8 +267,7 @@ public class SWClient {
 				try {
 					httpResponse = httpClient.execute(httpRequest);
 				} catch (SocketException e) {
-					if (e.getMessage().contains(
-							"Software caused connection abort")) {
+					if (e.getMessage().contains("Software caused connection abort")) {
 						try {
 							Thread.sleep(3000);
 						} catch (InterruptedException e1) {
@@ -295,8 +290,7 @@ public class SWClient {
 				try {
 					httpResponse = httpClient.execute(httpRequest);
 				} catch (SocketException e) {
-					if (e.getMessage().contains(
-							"Software caused connection abort")) {
+					if (e.getMessage().contains("Software caused connection abort")) {
 						try {
 							Thread.sleep(3000);
 						} catch (InterruptedException e1) {
@@ -333,8 +327,7 @@ public class SWClient {
 			int reConnectTimes = 3;
 			while (reConnectTimes-- != 0) {
 				long executeTime = System.currentTimeMillis();
-				SynchUtils.put(executeTime, "第" + reConnectTimes + "次发送请求 : "
-						+ httpRequest.getURI(), this.getClass());
+				SynchUtils.put(executeTime, "第" + reConnectTimes + "次发送请求 : " + httpRequest.getURI(), this.getClass());
 				try {
 					final String threadName = Thread.currentThread().getName();
 					// 处理超时
@@ -346,7 +339,7 @@ public class SWClient {
 							}
 							if (!httpRequest.isAborted()) {
 								httpRequest.abort();
-								logger.warn(threadName+"-强行关闭请求: " + httpRequest.getURI());
+								logger.warn(threadName + "-强行关闭请求: " + httpRequest.getURI());
 							}
 						}
 					}).start();
@@ -362,8 +355,7 @@ public class SWClient {
 					}
 				} catch (SocketException e) {
 					logger.error("SocketException : " + e.getMessage());
-					if (e.getMessage().contains(
-							"Software caused connection abort")
+					if (e.getMessage().contains("Software caused connection abort")
 							|| e.getMessage().contains("Connection reset")) {
 						try {
 							Thread.sleep(3000);
@@ -390,13 +382,11 @@ public class SWClient {
 				} catch (InterruptedException e) {
 				}
 				long executeTime = System.currentTimeMillis();
-				SynchUtils.put(executeTime,
-						"最后一次发送请求 : " + httpRequest.getURI(), this.getClass());
+				SynchUtils.put(executeTime, "最后一次发送请求 : " + httpRequest.getURI(), this.getClass());
 				try {
 					httpResponse = proxyHttpClient.execute(httpRequest);
 				} catch (SocketException e) {
-					if (e.getMessage().contains(
-							"Software caused connection abort")) {
+					if (e.getMessage().contains("Software caused connection abort")) {
 						try {
 							Thread.sleep(3000);
 						} catch (InterruptedException e1) {
@@ -424,8 +414,7 @@ public class SWClient {
 	 * @return
 	 * @throws TruncatedChunkException
 	 */
-	public String getText(HttpResponse httpResponse)
-			throws TruncatedChunkException {
+	public String getText(HttpResponse httpResponse) throws TruncatedChunkException {
 		try {
 			HttpEntity httpEntity = httpResponse.getEntity();
 			return EntityUtils.toString(httpEntity, "UTF-8");

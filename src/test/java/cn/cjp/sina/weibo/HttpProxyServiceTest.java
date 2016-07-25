@@ -12,7 +12,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.junit.Test;
 
-import cn.cjp.sina.weibo.http.proxy.bean.HttpProxyBean;
 import cn.cjp.sina.weibo.http.proxy.service.HttpProxyService;
 import cn.cjp.utils.JacksonUtil;
 
@@ -20,23 +19,21 @@ import cn.cjp.utils.JacksonUtil;
 public class HttpProxyServiceTest {
 
 	@Test
-	public void testGetProxy() {
-		HttpProxyBean proxyBean = HttpProxyService.getRandomProxy();
+	public void testGetProxy() throws IOException {
+		Object obj = HttpProxyService.getAll();
 
-		System.out.println(JacksonUtil.toJson(proxyBean));
+		System.out.println(JacksonUtil.toJson(obj));
 	}
 
 	@Test
-	public void testRequestByProxy() throws ClientProtocolException,
-			IOException {
+	public void testRequestByProxy() throws ClientProtocolException, IOException {
 		String host = "218.97.194.220";
 		int port = 80;
 
 		HttpHost httpHost = new HttpHost(host, port);
 		@SuppressWarnings("resource")
 		DefaultHttpClient httpClient = new DefaultHttpClient();
-		httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,
-				httpHost);
+		httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, httpHost);
 		HttpGet httpGet = new HttpGet("http://wap.baidu.com");
 
 		HttpResponse httpResponse = httpClient.execute(httpGet);

@@ -6,7 +6,7 @@
 	xmlns:util="http://www.springframework.org/schema/util" xmlns:cache="http://www.springframework.org/schema/cache"
 	xmlns:security="http://www.springframework.org/schema/security"
 	xsi:schemaLocation="
-		http://www.springframework.org/schema/data/solr http://www.springframework.org/schema/data/solr/spring-solr-1.0.xsd
+		http://www.springframework.org/schema/data/solr http://www.springframework.org/schema/data/solr/spring-solr.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
@@ -22,34 +22,33 @@
 	<solr:solr-server id="solrServer" url="${solr.host1}" />
 
 	<!-- 注入solrjDao -->
-	<bean id="solrjDao" class="cn.cjp.spider.common.dao.SolrjDao">
+	<bean id="solrjDao" class="cn.cjp.common.dao.SolrjDao">
 		<constructor-arg value="${solr.host1}" />
 	</bean>
-	
+
 	<!-- 实例化一个SolrTemplate -->
 	<bean id="solrTemplate" class="org.springframework.data.solr.core.SolrTemplate"
 		scope="singleton">
 		<constructor-arg ref="solrServer" />
 	</bean>
-	
+
 	<!-- 装配RepositoryFactory -->
 	<bean id="solrRepositoryFactory"
 		class="org.springframework.data.solr.repository.support.SolrRepositoryFactory">
 		<constructor-arg ref="solrTemplate"></constructor-arg>
 	</bean>
-	
+
 	<solr:repositories base-package="cn.cjp.spider.*.*.repo.*"
 		solr-template-ref="solrTemplate" repository-impl-postfix="Impl"></solr:repositories>
-	
+
 	<!-- SolrTemplate Autowired to Repo -->
 	<!-- SolrProductRepository继承了SimpleSolrRepository，后者包含solrOperations属性 -->
 	<!-- 这里需要用@Resource注解指定注入这个bean，不能用<solr:repositories>扫描，否则solrOperations为null -->
 	<bean id="chinanewsRepo"
-		class="cn.cjp.spider.chinanews.news.repo.impl.ChinanewsRepoImpl">
+		class="cn.cjp.chinanews.news.repo.impl.ChinanewsRepoImpl">
 		<property name="solrOperations" ref="solrTemplate" />
 	</bean>
-    
-	<!-- 将Repository装配到Service
-	<context:component-scan base-package="cn.cjp.spider.*.*.spider.*" />
-	 -->
+
+	<!-- 将Repository装配到Service <context:component-scan base-package="cn.cjp.spider.*.*.spider.*" 
+		/> -->
 </beans>

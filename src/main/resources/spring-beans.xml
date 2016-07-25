@@ -8,8 +8,8 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
 >
 	
-	<bean name="chinanewsThread" class="cn.cjp.spider.chinanews.news.spider.ChinanewsThread" />
+	<bean name="chinanewsThread" class="cn.cjp.chinanews.news.spider.ChinanewsThread" />
 	
-	<bean name="chinanewsSpider" class="cn.cjp.spider.chinanews.news.spider.ChinanewsSpider" />
+	<bean name="chinanewsSpider" class="cn.cjp.chinanews.news.spider.ChinanewsSpider" />
 	
 </beans>

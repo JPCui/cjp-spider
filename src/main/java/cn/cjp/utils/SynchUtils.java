@@ -41,7 +41,6 @@ public class SynchUtils extends Thread {
 			synchronized (logger) {
 				for (Long key : synMarkMap.keySet()) {
 					// 输出资源利用情况
-
 					logger.error(DateTimeUtils.toLoggerTime(key) + " : "
 							+ synMarkMap.get(key));
 				}

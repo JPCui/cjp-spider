@@ -1,5 +1,6 @@
 package cn.cjp.sina.weibo.spider;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -18,7 +19,7 @@ import cn.cjp.utils.FileUtil;
  * @author REAL
  * 
  */
-public class GetFansSpider implements Runnable {
+public class GetFansSpider extends Thread {
 
 	/**
 	 * Logger for this class
@@ -71,7 +72,6 @@ public class GetFansSpider implements Runnable {
 	 *            设置存储路径，不设置则不存
 	 */
 	public GetFansSpider(Map<String, String> accounts, String saveDir) {
-
 		savedFileDir = saveDir;
 		new GetFansSpider(accounts);
 	}
@@ -81,6 +81,10 @@ public class GetFansSpider implements Runnable {
 	 *            设置存储路径，不设置则不存
 	 */
 	public void setSavedFileDir(String saveDir) {
+		File file = new File(saveDir);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
 		savedFileDir = saveDir;
 	}
 
@@ -109,10 +113,8 @@ public class GetFansSpider implements Runnable {
 		 * 验证是否登录成功
 		 */
 		if (accessCore == null) {
-			logger.error(
-					"SinaWeiboHttpClientAccessCore为空",
-					new Throwable(
-							"SinaWeiboHttpClientAccessCore is null, please call check account for login"));
+			logger.error("SinaWeiboHttpClientAccessCore为空",
+					new Throwable("SinaWeiboHttpClientAccessCore is null, please call check account for login"));
 			return;
 		}
 		logger.info("Thread start...\n");
@@ -122,7 +124,7 @@ public class GetFansSpider implements Runnable {
 			printSpiderList();
 		}
 	}
-	
+
 	/**
 	 * 打印队列
 	 */
@@ -133,7 +135,7 @@ public class GetFansSpider implements Runnable {
 			logger.error("正在抓取队列 : " + grabbingUidSet.size());
 			logger.error("已抓取队列 : " + grabbedUidSet.size());
 			logger.error("======================");
-		}		
+		}
 	}
 
 	/**
@@ -166,8 +168,7 @@ public class GetFansSpider implements Runnable {
 		String grabbingUid = borrowUidFromList();
 		for (int i = 1; i <= grabPageNum; i++) {
 			// 抓取,解析Json
-			List<UserDomain> fansList = accessCore.requestFansByUid(
-					grabbingUid, i);
+			List<UserDomain> fansList = accessCore.requestFansByUid(grabbingUid, i);
 			if (fansList.size() == 0) {
 				break;
 			}
@@ -175,8 +176,7 @@ public class GetFansSpider implements Runnable {
 			int addingCount = 0;
 			for (UserDomain fan : fansList) {
 				String uid = fan.getId() + "";
-				if (!grabbedUidSet.contains(uid)
-						&& !grabbingUidSet.contains(uid)) {
+				if (!grabbedUidSet.contains(uid) && !grabbingUidSet.contains(uid)) {
 					addingCount++;
 					addUidToList(uid);
 				}
@@ -192,6 +192,7 @@ public class GetFansSpider implements Runnable {
 
 	/**
 	 * 从 正在抓取队列 删除当前Uid，并存入已抓取队列
+	 * 
 	 * @param grabbingUid
 	 */
 	private synchronized void returnUidToList(String grabbingUid) {
@@ -224,7 +225,7 @@ public class GetFansSpider implements Runnable {
 			data += fan.toString() + "\r\n";
 		}
 
-		FileUtil.write(data, savedFileDir + "/" + grabbingUid + ".fans", true);
+		FileUtil.write(data, savedFileDir + grabbingUid + ".fans", true);
 	}
 
 }
