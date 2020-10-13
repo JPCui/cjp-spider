@@ -14,7 +14,7 @@
 		<project.version>0.0.1-SNAPSHOT</project.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<junit.version>4.11</junit.version>
+		<junit.version>4.13.1</junit.version>
 		<servlet.version>2.5</servlet.version>
 		<cglib.version>2.2.2</cglib.version>
 		<validation.api.version>1.1.0.Final</validation.api.version>
