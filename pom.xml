@@ -23,7 +23,7 @@
 
 		<hibernate.version>4.3.10.Final</hibernate.version>
 
-		<spring.version>4.1.6.RELEASE</spring.version>
+		<spring.version>5.3.19</spring.version>
 		<solr.version>4.7.0</solr.version>
 		<validation-api>1.1.0.Final</validation-api>
 
